@@ -44,34 +44,34 @@ const SalerSidebar = ({ children }) => {
                         {collapsed ? '≡' : 'BloomGift'}
                     </Button>
                     <Menu iconShape="circle" menuItemStyles={menuItemStyles} >
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<House />} component={<NavLink to="/seller/dashboard" />}>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<House />} component={<NavLink to="/banhang/dashboard" />}>
                             Thống Kê
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Gem />} component={<NavLink to="/seller/shop-management" />}>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Gem />} component={<NavLink to="/banhang/shop-management" />}>
                             Shop Management
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/seller/customer-management" />}>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/customer-management" />}>
                             Customer Management
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/seller/order-management" />}>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/banhang/order-management" />}>
                             Order Management
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<BarChart />} component={<NavLink to="/seller/reports" />}>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<BarChart />} component={<NavLink to="/banhang/reports" />}>
                             Reports
                         </MenuItem>
                         <SubMenu label="Quản Lý Sản Phẩm " style={{ paddingLeft: "0px" }} icon={<BoxSeam />}>
-                            <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/seller/all-products" />}>
+                            <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/banhang/all-products" />}>
                                 Tất Cả Sản Phẩm
                             </MenuItem>
-                            <MenuItem style={{ paddingLeft: "15px" }} icon={<PlusCircle />} component={<NavLink to="/seller/add-product" />}>
+                            <MenuItem style={{ paddingLeft: "15px" }} icon={<PlusCircle />} component={<NavLink to="/banhang/add-product" />}>
                                 Thêm Sản Phẩm
                             </MenuItem>
                         </SubMenu>
                         <SubMenu label="Quản Lý Cửa Hàng " style={{ paddingLeft: "0px" }} icon={<BoxSeam />}>
-                            <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/seller/shop-profile" />}>
+                            <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/banhang/shop-profile" />}>
                                 Hồ Sơ Shop
                             </MenuItem>
-                            <MenuItem style={{ paddingLeft: "15px" }} icon={<PlusCircle />} component={<NavLink to="/seller/shop-settings" />}>
+                            <MenuItem style={{ paddingLeft: "15px" }} icon={<PlusCircle />} component={<NavLink to="/banhang/shop-settings" />}>
                                 Thiết Lập Shop
                             </MenuItem>
                         </SubMenu>

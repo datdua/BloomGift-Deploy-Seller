@@ -118,7 +118,7 @@ const ProductList = () => {
                         <Option key={category} value={category}>{category}</Option>
                     ))}
                 </Select>
-                <NavLink to="/seller/add-product">
+                <NavLink to="/banhang/add-product">
                     <Button type="primary" style={{ background: '#F56285', borderColor: '#F56285' }} icon={<PlusOutlined />}>
                         Thêm 1 sản phẩm mới
                     </Button>
