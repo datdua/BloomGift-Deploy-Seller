@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { getAllProducts, getProductByStatusTrue, getProductByStatusFalse } from '../../../redux/actions/productActions';
+import { getAllProducts, getProductByStatusTrue, getProductByStatusFalse, deleteProduct } from '../../../redux/actions/productActions';
 import { Button, Input, Select, Table, Empty, Tabs } from 'antd';
-import { PlusOutlined, SearchOutlined } from '@ant-design/icons';
+import { PlusOutlined, SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import UpdateProduct from './UpdateProduct';
+import Swal from 'sweetalert2';
 import './ProductList.css';
 
 const { Option } = Select;
@@ -14,6 +16,8 @@ const ProductList = () => {
     const products = useSelector(state => state.productData.products) || [];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [updateModalVisible, setUpdateModalVisible] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState(null);
 
     useEffect(() => {
         dispatch(getAllProducts());
@@ -33,6 +37,43 @@ const ProductList = () => {
             default:
                 break;
         }
+    };
+
+    const handleUpdateClick = (productId) => {
+        setSelectedProductId(productId);
+        setUpdateModalVisible(true);
+    };
+
+    const handleDeleteClick = (productId) => {
+        Swal.fire({
+            title: 'Bạn có chắc chắn muốn xóa sản phẩm này?',
+            text: "Hành động này không thể hoàn tác!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Có, xóa nó!',
+            cancelButtonText: 'Hủy'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                dispatch(deleteProduct(productId))
+                    .then(() => {
+                        Swal.fire(
+                            'Đã xóa!',
+                            'Sản phẩm đã được xóa thành công.',
+                            'success'
+                        );
+                        dispatch(getAllProducts());
+                    })
+                    .catch((error) => {
+                        Swal.fire(
+                            'Lỗi!',
+                            'Có lỗi xảy ra khi xóa sản phẩm.',
+                            'error'
+                        );
+                    });
+            }
+        });
     };
 
     const columns = [
@@ -61,7 +102,7 @@ const ProductList = () => {
             title: 'Giá',
             dataIndex: 'price',
             key: 'price',
-            render: (price) => `$${price.toFixed(2)}`,
+            render: (price) => `${price.toFixed(2)} VNĐ`,
             sorter: (a, b) => a.price - b.price,
         },
         {
@@ -71,20 +112,27 @@ const ProductList = () => {
             sorter: (a, b) => a.quantity - b.quantity,
         },
         {
-            title: 'Chất Lượng Nội Dung',
+            title: 'Mô tả',
             key: 'description',
             dataIndex: 'description',
+            width: 800, 
             render: description => (
                 <span>
-                    {description.length > 50 ? description.slice(0, 50) + '...' : description}
+                    {description.length > 200 ? description.slice(0, 500) + '...' : description}
                 </span>
             ),
         },
         {
             title: 'Thao tác',
             key: 'action',
-            render: () => (
-                <Button type="link">Chỉnh sửa</Button>
+            width: 150,
+            render: (_, record) => (
+                <>
+                    <Button type="link" onClick={() => handleUpdateClick(record.productID)} icon={<EditOutlined />}>Chỉnh sửa</Button>
+                    <Button type="link" danger onClick={() => handleDeleteClick(record.productID)} icon={<DeleteOutlined />}>
+                        Xóa
+                    </Button>
+                </>
             ),
         },
     ];
@@ -159,6 +207,11 @@ const ProductList = () => {
                     />
                 </TabPane>
             </Tabs>
+            <UpdateProduct
+                visible={updateModalVisible}
+                onCancel={() => setUpdateModalVisible(false)}
+                productID={selectedProductId}
+            />
         </div>
     );
 };

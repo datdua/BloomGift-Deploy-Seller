@@ -16,6 +16,7 @@ import StoreProfile from "./components/sidebar/ProductManager/StoreProfile";
 import Header from "./components/sidebar/HeaderSidebar";
 import ProductList from "./components/sidebar/ProductManager/ProductList";
 import AddProduct from "./components/sidebar/ProductManager/AddProduct";
+import UpdateProduct from "./components/sidebar/ProductManager/UpdateProduct";
 
 
 // // home pages
@@ -111,7 +112,7 @@ import AddProduct from "./components/sidebar/ProductManager/AddProduct";
 // const About = lazy(() => import("./pages/other/About"));
 // const Contact = lazy(() => import("./pages/other/Contact"));
 // const MyAccount = lazy(() => import("./pages/other/MyAccount"));
-// const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
+const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
 
 // const Cart = lazy(() => import("./pages/other/Cart"));
 // const Wishlist = lazy(() => import("./pages/other/Wishlist"));
@@ -150,6 +151,10 @@ const App = (props) => {
               }
             >
               <Switch>
+                <Route
+                  path={publicUrl + "/login-register"}
+                  component={LoginRegister}
+                />
                 <Route
                   path={publicUrl + "/forget-password"}
                   component={ForgetPasswordForm}
