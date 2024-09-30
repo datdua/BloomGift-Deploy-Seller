@@ -16,7 +16,7 @@ const HomeCosmetics = () => {
         <title>BloomGift |Cosmetics Home</title>
         <meta
           name="description"
-          content="Cosmetics home of flone react minimalist eCommerce template."
+          content="Cosmetics home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutOne

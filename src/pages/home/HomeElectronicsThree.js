@@ -16,7 +16,7 @@ const HomeElectronicsThree = () => {
         <title>BloomGift |Electronics Home</title>
         <meta
           name="description"
-          content="Electronics home of flone react minimalist eCommerce template."
+          content="Electronics home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutOne headerTop="visible">
