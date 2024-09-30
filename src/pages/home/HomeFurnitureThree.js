@@ -16,7 +16,7 @@ const HomeFurnitureThree = () => {
         <title>BloomGift |Furniture Home</title>
         <meta
           name="description"
-          content="Furniture home of flone react minimalist eCommerce template."
+          content="Furniture home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutOne
