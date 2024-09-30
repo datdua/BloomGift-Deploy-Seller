@@ -78,7 +78,7 @@ const Login = () => {
         }}>
             <Container fluid>
                 <Row className="justify-content-end row">
-                    <Col lg={4} md={6} className="px-5" style={{ marginRight: '150px' }}>
+                    <Col lg={4} md={6} className="px-5" style={{ marginRight: '160px' }}>
                         <div className="bg-white p-4 rounded shadow-lg">
                             <h2 className="text-center mb-4" style={{ color: '#f56387' }}>Đăng Nhập</h2>
                             <Form onSubmit={handleLogin}>

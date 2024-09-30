@@ -32,7 +32,7 @@ const ForgetPasswordForm = ({ setEmail, setShowForgetPasswordForm, setShowResetP
   return (
     <Fragment>
       <MetaTags>
-        <title>Bloom Gift | Quên Mật Khẩu</title>
+        <title>BloomGift | Quên Mật Khẩu</title>
         <meta name="description" content="Forgot password page." />
       </MetaTags>
       <BreadcrumbsItem to="/">Trang chủ</BreadcrumbsItem>
