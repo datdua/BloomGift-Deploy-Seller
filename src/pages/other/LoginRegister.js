@@ -131,7 +131,7 @@ const LoginRegister = ({ location }) => {
               .catch((error) => {
                 console.error("Lỗi fetching store data:", error);
               });
-            history.push("/seller/dashboard");
+            history.push("/banhang/dashboard");
           } else {
             history.push("/home-fashion");
           }
@@ -187,12 +187,6 @@ const LoginRegister = ({ location }) => {
 
   return (
     <Fragment>
-      <MetaTags>
-        <title>Bloom Gift | Đăng Nhập</title>
-        <meta name="description" content="Compare page of flone react minimalist eCommerce template." />
-      </MetaTags>
-      <BreadcrumbsItem to={publicUrl + "/"}>Trang chủ</BreadcrumbsItem>
-      <BreadcrumbsItem to={publicUrl + pathname}>Đăng nhập - Đăng ký</BreadcrumbsItem>
       <LayoutOne headerTop="visible">
         <Breadcrumb />
         <div className="login-register-area pt-100 pb-100">

@@ -4,6 +4,7 @@ import cartReducer from "./cartReducer";
 import wishlistReducer from "./wishlistReducer";
 import compareReducer from "./compareReducer";
 import storeReducer from "./storeReducer";
+import promotionReducer from "./promotionReducer";
 import { combineReducers } from "redux";
 import { createMultilanguageReducer } from "redux-multilanguage";
 
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   cartData: cartReducer,
   wishlistData: wishlistReducer,
   compareData: compareReducer,
-  seller: storeReducer
+  seller: storeReducer,
+  promotionData: promotionReducer
 });
 
 export default rootReducer;

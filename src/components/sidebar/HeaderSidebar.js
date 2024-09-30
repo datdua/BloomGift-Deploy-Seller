@@ -44,7 +44,7 @@ const Header = ({ username, avatarUrl }) => {
     const handleLogout = () => {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
-        history.push("/login-register");
+        history.push("/login");
     };
 
     return (
