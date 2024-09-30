@@ -50,8 +50,8 @@ const SalerSidebar = ({ children }) => {
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Gem />} component={<NavLink to="/banhang/shop-management" />}>
                             Shop Management
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/customer-management" />}>
-                            Customer Management
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/all-promotion" />}>
+                            Quản Lý Khuyến Mãi
                         </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/banhang/order-management" />}>
                             Order Management

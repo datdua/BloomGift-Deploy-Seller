@@ -13,9 +13,10 @@ import SalerSidebar from "./components/sidebar/Sidebar";
 import Dashboard from "./components/sidebar/DashBoard";
 import ShopManagement from "./components/sidebar/ShopManagement";
 import StoreProfile from "./components/sidebar/ProductManager/StoreProfile";
-import Header from "./components/sidebar/HeaderSidebar";
 import ProductList from "./components/sidebar/ProductManager/ProductList";
+import PromotionList from "./components/sidebar/PromotionManager/PromotionList";
 import AddProduct from "./components/sidebar/ProductManager/AddProduct";
+import LoginPage from "./pages/other/Login";
 import UpdateProduct from "./components/sidebar/ProductManager/UpdateProduct";
 
 
@@ -112,14 +113,14 @@ import UpdateProduct from "./components/sidebar/ProductManager/UpdateProduct";
 // const About = lazy(() => import("./pages/other/About"));
 // const Contact = lazy(() => import("./pages/other/Contact"));
 // const MyAccount = lazy(() => import("./pages/other/MyAccount"));
-const LoginRegister = lazy(() => import("./pages/other/LoginRegister"));
+// const LoginRegister = lazy(() => import("./pages/other/Login"));
 
 // const Cart = lazy(() => import("./pages/other/Cart"));
 // const Wishlist = lazy(() => import("./pages/other/Wishlist"));
 // const Compare = lazy(() => import("./pages/other/Compare"));
 // const Checkout = lazy(() => import("./pages/other/Checkout"));
 
-const NotFound = lazy(() => import("./pages/other/NotFound"));
+const NotFound = lazy(() => import("./pages/other/Login"));
 const publicUrl = typeof process !== 'undefined' ? process.env.REACT_APP_PUBLIC_URL || "" : "";
 
 const App = (props) => {
@@ -152,8 +153,8 @@ const App = (props) => {
             >
               <Switch>
                 <Route
-                  path={publicUrl + "/login-register"}
-                  component={LoginRegister}
+                  path={publicUrl + "/login"}
+                  component={LoginPage}
                 />
                 <Route
                   path={publicUrl + "/forget-password"}
@@ -179,6 +180,7 @@ const App = (props) => {
                       <Route path="/banhang/shop-profile" component={StoreProfile} />
                       <Route path="/banhang/all-products" component={ProductList} />
                       <Route path="/banhang/add-product" component={AddProduct} />
+                      <Route path="/banhang/all-promotions" component={PromotionList} />
                     </Switch>
                   </SalerSidebar>
                 </Route>
