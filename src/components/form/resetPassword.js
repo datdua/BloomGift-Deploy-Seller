@@ -58,7 +58,7 @@ const ResetPasswordForm = ({ setShowResetPasswordForm }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Bloom Gift | Đặt Lại Mật Khẩu</title>
+        <title>BloomGift | Đặt Lại Mật Khẩu</title>
         <meta name="description" content="Reset password page." />
       </MetaTags>
       <BreadcrumbsItem to="/">Trang chủ</BreadcrumbsItem>
