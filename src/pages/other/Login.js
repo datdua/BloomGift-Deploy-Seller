@@ -69,7 +69,7 @@ const Login = () => {
 
     return (
         <div className="login-page" style={{
-            backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/bloom-gift-67f83.appspot.com/o/element-layout%2Flogo%2Fbanner-authen-seller.png?alt=media&token=48456481-a3c0-4034-bb7f-16290186ba7d')`,
+            backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/bloom-gift-67f83.appspot.com/o/element-layout%2Flogo%2Fbanner-authen-seller.png?alt=media&token=d2e8f34e-6f92-4ef7-b5b0-fc2ddb17b478')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             minHeight: '100vh',
