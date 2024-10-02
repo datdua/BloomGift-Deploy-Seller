@@ -14,10 +14,10 @@ const BlogRightSidebar = ({ location }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Blog</title>
+        <title>BloomGift |Blog</title>
         <meta
           name="description"
-          content="Blog of flone react minimalist eCommerce template."
+          content="Blog of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <BreadcrumbsItem to={process.env.PUBLIC_URL + "/"}>Trang chủ</BreadcrumbsItem>

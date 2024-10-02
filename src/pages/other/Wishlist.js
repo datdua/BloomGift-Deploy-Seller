@@ -30,10 +30,10 @@ const Wishlist = ({
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Wishlist</title>
+        <title>BloomGift |Wishlist</title>
         <meta
           name="description"
-          content="Wishlist page of flone react minimalist eCommerce template."
+          content="Wishlist page of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
 

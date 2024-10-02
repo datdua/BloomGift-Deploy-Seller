@@ -11,10 +11,10 @@ const HomePlants = () => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Plants Home</title>
+        <title>BloomGift |Plants Home</title>
         <meta
           name="description"
-          content="Plants home of flone react minimalist eCommerce template."
+          content="Plants home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutTwo footerBgClass="bg-gray-4">

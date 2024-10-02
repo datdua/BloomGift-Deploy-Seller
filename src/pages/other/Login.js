@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch } from 'react-redux';
-import { jwtDecode }from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import { useToasts } from 'react-toast-notifications';
 import { loginAccount } from '../../redux/actions/authenticationActions';
 import { fetchSellerInfo } from "../../redux/actions/storeActions";
@@ -51,7 +51,6 @@ const Login = () => {
                     localStorage.setItem("storeID", decodedToken.storeID);
 
                     if (decodedToken.role === "ROLE_SELLER") {
-                        // Lưu trữ thông tin seller
                         dispatch(fetchSellerInfo(decodedToken.storeID))
                             .then((storeData) => {
                                 console.log("Store data fetch thành công", storeData);
@@ -69,45 +68,59 @@ const Login = () => {
     };
 
     return (
-        <div className="login-register-area" style={{
-            backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/bloom-gift-67f83.appspot.com/o/element-layout%2Flogo%2Fbackground_seller.jpeg?alt=media&token=411239f9-bf19-4a10-b484-1bdf2c9d0870')`,
+        <div className="login-page" style={{
+            backgroundImage: `url('https://firebasestorage.googleapis.com/v0/b/bloom-gift-67f83.appspot.com/o/element-layout%2Flogo%2Fbanner-authen-seller.png?alt=media&token=48456481-a3c0-4034-bb7f-16290186ba7d')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            minHeight: '100vh'
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
         }}>
-            <Container className="pt-5">
-                <Row className="justify-content-center">
-                    <Col lg={8} md={12}>
-                        <div className="login-register-wrapper">
-                            <div className="login-form-container">
-                                <div className="login-wrapper p-4 shadow-lg rounded bg-light">
-                                    <h3 className="text-center mb-4">Đăng Nhập</h3>
-                                <div className="login-register-form">
-                                    <Form onSubmit={handleLogin}>
-                                        <Form.Group>
-                                            <Form.Control type="email" name="user-email" placeholder="Email" required />
-                                        </Form.Group>
-                                        <Form.Group>
-                                            <Form.Control type="password" name="user-password" placeholder="Mật khẩu" required />
-                                        </Form.Group>
-                                        <div className="button-box">
-                                            <div className="login-toggle-btn d-flex justify-content-between">
-                                                <Form.Check
-                                                    type="checkbox"
-                                                    label="Ghi nhớ tài khoản"
-                                                    checked={rememberMe}
-                                                    onChange={(e) => setRememberMe(e.target.checked)}
-                                                />
-                                                <Link to="/forget-password" style={{ color: '#ff69b4' }}>Quên mật khẩu?</Link>
-                                            </div>
-                                            <Button type="submit" variant="primary" style={{ backgroundColor: '#ff69b4', borderColor: '#ff69b4' }}>
-                                                Đăng Nhập
-                                            </Button>
-                                        </div>
-                                    </Form>
+            <Container fluid>
+                <Row className="justify-content-end row">
+                    <Col lg={4} md={6} className="px-5" style={{ marginRight: '160px' }}>
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <h2 className="text-center mb-4" style={{ color: '#f56387' }}>Đăng Nhập</h2>
+                            <Form onSubmit={handleLogin}>
+                                <Form.Group className="mb-3">
+                                    <Form.Control
+                                        type="email"
+                                        name="user-email"
+                                        placeholder="Email"
+                                        required
+                                        className="py-2"
+                                    />
+                                </Form.Group>
+                                <Form.Group className="mb-3">
+                                    <Form.Control
+                                        type="password"
+                                        name="user-password"
+                                        placeholder="Mật khẩu"
+                                        required
+                                        className="py-2"
+                                    />
+                                </Form.Group>
+                                <div className="d-flex justify-content-between align-items-center mb-3">
+                                    <div className="custom-checkbox">
+                                        <Form.Check
+                                            type="checkbox"
+                                            id="rememberMe"
+                                            checked={rememberMe}
+                                            onChange={(e) => setRememberMe(e.target.checked)}
+                                            label="Ghi nhớ đăng nhập"
+                                            className="text-muted"
+                                        />
                                     </div>
+                                    <Link to="/forget-password" style={{ color: '#f56387', textDecoration: 'none' }}>Quên mật khẩu?</Link>
                                 </div>
-                            </div>
+                                <Button
+                                    type="submit"
+                                    className="w-100 py-2 mb-3"
+                                    style={{ backgroundColor: '#f56387', borderColor: '#f56387' }}
+                                >
+                                    Đăng Nhập
+                                </Button>
+                            </Form>
                         </div>
                     </Col>
                 </Row>

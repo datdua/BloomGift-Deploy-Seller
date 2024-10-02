@@ -12,10 +12,10 @@ const HomeAutoParts = () => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Auto parts Home</title>
+        <title>BloomGift |Auto parts Home</title>
         <meta
           name="description"
-          content="Auto parts home of flone react minimalist eCommerce template."
+          content="Auto parts home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutOne headerTop="visible">

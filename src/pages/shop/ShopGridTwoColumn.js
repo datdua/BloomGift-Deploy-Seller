@@ -54,10 +54,10 @@ const ShopGridTwoColumn = ({ location, products }) => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Shop Page</title>
+        <title>BloomGift |Shop Page</title>
         <meta
           name="description"
-          content="Shop page of flone react minimalist eCommerce template."
+          content="Shop page of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
 

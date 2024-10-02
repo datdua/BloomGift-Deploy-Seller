@@ -13,10 +13,10 @@ const HomeBookStore = () => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Book Store Home</title>
+        <title>BloomGift |Book Store Home</title>
         <meta
           name="description"
-          content="Book store home of flone react minimalist eCommerce template."
+          content="Book store home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutTwo>

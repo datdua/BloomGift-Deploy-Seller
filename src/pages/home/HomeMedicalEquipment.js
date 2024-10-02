@@ -14,10 +14,10 @@ const HomeMedicalEquipment = () => {
   return (
     <Fragment>
       <MetaTags>
-        <title>Flone | Medical Equipment Home</title>
+        <title>BloomGift |Medical Equipment Home</title>
         <meta
           name="description"
-          content="Medical Equipment home of flone react minimalist eCommerce template."
+          content="Medical Equipment home of flone BloomGift - Nền tảng mua & bán trực tuyến dành cho các cửa hàng bán hoa."
         />
       </MetaTags>
       <LayoutOne
