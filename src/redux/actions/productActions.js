@@ -38,7 +38,7 @@ export const fetchProducts = products => {
 export const getAllProducts = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/product/get-all');
+      const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/product/get-all');
       if (response.status !== 200) {
         throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
       }
@@ -59,7 +59,7 @@ export const getAllProducts = () => {
 export const getProductByStatusTrue = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/product/products/status?productStatus=true');
+      const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/product/products/status?productStatus=true');
       if (response.status !== 200) {
         throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
       }
@@ -79,7 +79,7 @@ export const getProductByStatusTrue = () => {
 export const getProductByStatusFalse = () => {
   return async (dispatch) => {
     try {
-      const response = await axios.get('http://localhost:8080/api/product/products/status?productStatus=false');
+      const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/product/products/status?productStatus=false');
       if (response.status !== 200) {
         throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
       }
@@ -110,7 +110,7 @@ export const createProduct = (productRequest, imageFiles) => {
       });
 
       const response = await axios.post(
-        'http://localhost:8080/api/product/create',
+        'https://bloomgift-bloomgift.azuremicroservices.io/api/product/create',
         formData,
         {
           headers: {
@@ -145,7 +145,7 @@ export const updateProduct = (productID, productRequest, imageFiles) => {
       });
 
       const response = await axios.put(
-        `http://localhost:8080/api/product/update-product/${productID}`,
+        `https://bloomgift-bloomgift.azuremicroservices.io/api/product/update-product/${productID}`,
         formData,
         {
           headers: {
@@ -175,7 +175,7 @@ export const updateProduct = (productID, productRequest, imageFiles) => {
 export const getProductByID = (productID) => {
   return async (dispatch) => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/product/${productID}`);
+      const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/${productID}`);
       if (response.status === 200) {
         const product = response.data;
         dispatch({
@@ -196,7 +196,7 @@ export const getProductByID = (productID) => {
 export const deleteProduct = (productID) => {
   return async (dispatch) => {
     try {
-      const response = await axios.delete(`http://localhost:8080/api/product/delete-product/${productID}`);
+      const response = await axios.delete(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/delete-product/${productID}`);
       if (response.status === 200) {
         dispatch({
           type: DELETE_PRODUCT_SUCCESS,

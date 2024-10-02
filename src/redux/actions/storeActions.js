@@ -11,7 +11,7 @@ export const fetchSellerInfo = (sellerId) => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.get('http://localhost:8080/api/seller/store/store-management/get-by-id', {
+            const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/seller/store/store-management/get-by-id', {
                 params: { storeID: sellerId },
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ export const updateSellerInfo = (sellerId, sellerInfo) => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.put(`http://localhost:8080/api/seller/store/store-management/update/${sellerId}`, sellerInfo, {
+            const response = await axios.put(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/store/store-management/update/${sellerId}`, sellerInfo, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

@@ -180,7 +180,7 @@ const App = (props) => {
                       <Route path="/banhang/shop-profile" component={StoreProfile} />
                       <Route path="/banhang/all-products" component={ProductList} />
                       <Route path="/banhang/add-product" component={AddProduct} />
-                      <Route path="/banhang/all-promotions" component={PromotionList} />
+                      <Route path="/banhang/all-promotion" component={PromotionList} />
                     </Switch>
                   </SalerSidebar>
                 </Route>
