@@ -6,6 +6,7 @@ export const GET_PROMOTION_BY_STATUS = "GET_PROMOTION_BY_STATUS";
 export const CREATE_PROMOTION = "CREATE_PROMOTION";
 export const UPDATE_PROMOTION = "UPDATE_PROMOTION";
 export const DELETE_PROMOTION = "DELETE_PROMOTION";
+export const SET_PROMOTION_ERROR = "SET_PROMOTION_ERROR";
 
 
 export const getAllPromotions = () => {
@@ -35,8 +36,7 @@ export const getAllPromotions = () => {
 export const getPromotionByStatus = (promotionStatus) => {
     return async (dispatch) => {
         try {
-            const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/get-by-promotion-status', {
-                params: { promotionStatus: promotionStatus },
+            const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/get-by-promotion-status/${promotionStatus}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
@@ -45,23 +45,33 @@ export const getPromotionByStatus = (promotionStatus) => {
                 throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
             }
             const promotions = response.data;
-            dispatch({
-                type: GET_PROMOTION_BY_STATUS,
-                payload: promotions
-            });
+            if (promotions.message === "Không tìm thấy khuyến mãi với trạng thái này") {
+                dispatch({
+                    type: SET_PROMOTION_ERROR,
+                    payload: "Không tìm thấy mã giảm giá"
+                });
+            } else {
+                dispatch({
+                    type: GET_PROMOTION_BY_STATUS,
+                    payload: promotions
+                });
+            }
             return promotions;
         } catch (error) {
-            console.error("Fetch all promotions failed:", error);
+            console.error("Fetch promotions by status failed:", error);
+            dispatch({
+                type: SET_PROMOTION_ERROR,
+                payload: "Không tìm thấy khuyến mãi với trạng thái này."
+            });
             return Promise.reject(error);
         }
     }
 }
 
-export const getPromotionById = (promotionId) => {
+export const getPromotionById = (promotionID) => {
     return async (dispatch) => {
         try {
-            const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/get-by-id', {
-                params: { promotionID: promotionId },
+            const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/get-by-promotionID/${promotionID}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
@@ -81,11 +91,10 @@ export const getPromotionById = (promotionId) => {
         }
     }
 }
-
-export const createPromotion = (promotionInfo) => {
+export const createPromotion = (storeID, promotionInfo) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post('https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/create', promotionInfo, {
+            const response = await axios.post(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/create?storeID=${storeID}`, promotionInfo, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
@@ -98,18 +107,16 @@ export const createPromotion = (promotionInfo) => {
                 type: CREATE_PROMOTION,
                 payload: promotion
             });
-            return promotion;
         } catch (error) {
-            console.error("Create promotion failed:", error);
             return Promise.reject(error);
         }
     }
 }
 
-export const updatePromotion = (promotionId, promotionInfo) => {
+export const updatePromotion = (promotionID, promotionInfo) => {
     return async (dispatch) => {
         try {
-            const response = await axios.put(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/update/${promotionId}`, promotionInfo, {
+            const response = await axios.put(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/update/${promotionID}`, promotionInfo, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
@@ -120,9 +127,8 @@ export const updatePromotion = (promotionId, promotionInfo) => {
             const promotion = response.data;
             dispatch({
                 type: UPDATE_PROMOTION,
-                payload: promotion
+                payload: 'Cập nhật khuyến mãi thành công'
             });
-            return promotion;
         } catch (error) {
             console.error("Update promotion failed:", error);
             return Promise.reject(error);
@@ -130,10 +136,10 @@ export const updatePromotion = (promotionId, promotionInfo) => {
     }
 }
 
-export const deletePromotion = (promotionId) => {
+export const deletePromotion = (promotionID) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/delete/${promotionId}`, {
+            const response = await axios.delete(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/delete/${promotionID}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 }
@@ -143,11 +149,9 @@ export const deletePromotion = (promotionId) => {
             }
             dispatch({
                 type: DELETE_PROMOTION,
-                payload: promotionId
+                payload: promotionID
             });
-            return promotionId;
         } catch (error) {
-            console.error("Delete promotion failed:", error);
             return Promise.reject(error);
         }
     }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { getAllPromotions, getPromotionByStatus, deletePromotion} from '../../../redux/actions/promotionActions';
-import { Button, Input, Select, Table, Empty, Tabs } from 'antd';
+import { getAllPromotions, getPromotionByStatus, deletePromotion } from '../../../redux/actions/promotionActions';
+import { Button, Input, Select, Table, Empty, Tabs, Modal } from 'antd';
+import AddPromotion from './AddPromotion';
+import UpdatePromotion from './UpdatePromotion';
 import { PlusOutlined, SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import '../ProductManager/ProductList.css';
@@ -13,14 +14,28 @@ const { TabPane } = Tabs;
 const PromotionList = () => {
     const dispatch = useDispatch();
     const promotions = useSelector(state => state.promotionData.promotions) || [];
+    const error = useSelector(state => state.promotionData.error);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [isModalVisible, setIsModalVisible] = useState(false);
     const [updateModalVisible, setUpdateModalVisible] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedPromotionId, setSelectedPromotionId] = useState(null);
 
     useEffect(() => {
         dispatch(getAllPromotions());
     }, [dispatch]);
+
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleOk = () => {
+        setIsModalVisible(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
 
     const handleTabChange = (key) => {
         switch (key) {
@@ -39,7 +54,7 @@ const PromotionList = () => {
     };
 
     const handleUpdateClick = (promotionId) => {
-        setSelectedProductId(promotionId);
+        setSelectedPromotionId(promotionId);
         setUpdateModalVisible(true);
     };
 
@@ -55,7 +70,7 @@ const PromotionList = () => {
             cancelButtonText: 'Hủy'
         }).then((result) => {
             if (result.isConfirmed) {
-                dispatch(deletePromotion(promotionId))
+                dispatch(deletePromotion([promotionId]))
                     .then(() => {
                         Swal.fire(
                             'Đã xóa!',
@@ -119,11 +134,6 @@ const PromotionList = () => {
             key: 'endDate',
         },
         {
-            title: 'Tên cửa hàng',
-            dataIndex: 'storeName',
-            key: 'storeName',
-        },
-        {
             title: 'Hành động',
             key: 'action',
             render: (text, record) => (
@@ -148,7 +158,7 @@ const PromotionList = () => {
         },
     ];
 
-    const filteredpromotions = promotions.filter(promotion =>
+    const filteredPromotions = promotions.filter(promotion =>
         promotion.promotionName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (selectedCategory === '' || promotion.categoryName === selectedCategory)
     );
@@ -162,7 +172,7 @@ const PromotionList = () => {
         emptyText: (
             <Empty
                 image={Empty.PRESENTED_IMAGE_DEFAULT}
-                description="Không tìm thấy sản phẩm"
+                description={error || "Không tìm thấy mã giảm giá"}
             />
         ),
     };
@@ -177,11 +187,12 @@ const PromotionList = () => {
                         <Option key={category} value={category}>{category}</Option>
                     ))}
                 </Select>
-                <NavLink to="/banhang/add-promotion">
-                    <Button type="primary" style={{ background: '#F56285', borderColor: '#F56285' }} icon={<PlusOutlined />}>
-                        Thêm 1 sản phẩm mới
-                    </Button>
-                </NavLink>
+                <Button type="primary" style={{ background: '#F56285', borderColor: '#F56285' }} icon={<PlusOutlined />} onClick={showModal}>
+                    Thêm mã khuyến mãi
+                </Button>
+                <Modal title="Thêm Khuyến Mãi" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel} footer={null}>
+                    <AddPromotion />
+                </Modal>
             </div>
             <Input
                 placeholder="Tìm tên sản phẩm, SKU sản phẩm, SKU phân loại, Mã sản phẩm"
@@ -193,7 +204,7 @@ const PromotionList = () => {
                 <TabPane tab="Tất cả" key="all">
                     <Table
                         columns={columns}
-                        dataSource={filteredpromotions}
+                        dataSource={filteredPromotions}
                         rowKey="promotionID"
                         locale={customLocale}
                         pagination={{ pageSize: 10 }}
@@ -202,7 +213,7 @@ const PromotionList = () => {
                 <TabPane tab="Đang Hoạt Động" key="active">
                     <Table
                         columns={columns}
-                        dataSource={filteredpromotions}
+                        dataSource={filteredPromotions}
                         rowKey="promotionID"
                         locale={customLocale}
                         pagination={{ pageSize: 10 }}
@@ -211,18 +222,16 @@ const PromotionList = () => {
                 <TabPane tab="Vi Phạm" key="violated">
                     <Table
                         columns={columns}
-                        dataSource={filteredpromotions}
+                        dataSource={filteredPromotions}
                         rowKey="promotionID"
                         locale={customLocale}
                         pagination={{ pageSize: 10 }}
                     />
                 </TabPane>
             </Tabs>
-            {/* <UpdateProduct
-                visible={updateModalVisible}
-                onCancel={() => setUpdateModalVisible(false)}
-                promotionID={selectedProductId}
-            /> */}
+            <Modal title="Cập Nhật Khuyến Mãi" visible={updateModalVisible} onCancel={() => setUpdateModalVisible(false)} footer={null}>
+                <UpdatePromotion promotionID={selectedPromotionId} onCancel={() => setUpdateModalVisible(false)} />
+            </Modal>
         </div>
     );
 };
