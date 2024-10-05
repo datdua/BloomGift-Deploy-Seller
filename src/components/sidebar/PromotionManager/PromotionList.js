@@ -138,12 +138,8 @@ const PromotionList = () => {
             key: 'action',
             render: (text, record) => (
                 <div style={{ display: 'flex', gap: '10px' }}>
-                    <Button
-                        type="primary"
-                        icon={<EditOutlined />}
-                        onClick={() => handleUpdateClick(record.promotionID)}
-                    >
-                        Sửa
+                    <Button icon={<EditOutlined />} onClick={() => handleUpdateClick(record.promotionID)}>
+                        Chỉnh sửa
                     </Button>
                     <Button
                         type="primary"
@@ -195,7 +191,7 @@ const PromotionList = () => {
                 </Modal>
             </div>
             <Input
-                placeholder="Tìm tên sản phẩm, SKU sản phẩm, SKU phân loại, Mã sản phẩm"
+                placeholder="Tìm khuyến mãi mà bạn muốn..."
                 onChange={e => setSearchTerm(e.target.value)}
                 style={{ marginBottom: '20px', borderColor: '#F56285' }}
                 suffix={<SearchOutlined style={{ fontSize: '18px', color: '#bfbfbf' }} />}
@@ -229,9 +225,11 @@ const PromotionList = () => {
                     />
                 </TabPane>
             </Tabs>
-            <Modal title="Cập Nhật Khuyến Mãi" visible={updateModalVisible} onCancel={() => setUpdateModalVisible(false)} footer={null}>
-                <UpdatePromotion promotionID={selectedPromotionId} onCancel={() => setUpdateModalVisible(false)} />
-            </Modal>
+            <UpdatePromotion
+                promotionID={selectedPromotionId}
+                visible={updateModalVisible}
+                onClose={() => setUpdateModalVisible(false)}
+            />
         </div>
     );
 };

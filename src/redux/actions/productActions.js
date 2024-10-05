@@ -114,6 +114,7 @@ export const createProduct = (productRequest, imageFiles) => {
         formData,
         {
           headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data',
           },
         }
@@ -149,6 +150,7 @@ export const updateProduct = (productID, productRequest, imageFiles) => {
         formData,
         {
           headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
             'Content-Type': 'multipart/form-data',
           },
         }

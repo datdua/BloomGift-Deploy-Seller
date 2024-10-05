@@ -1,3 +1,4 @@
+import { Content } from "antd/es/layout/layout";
 import axios from "axios";
 
 export const GET_ALL_PROMOTIONS = "GET_ALL_PROMOTIONS";
@@ -116,9 +117,11 @@ export const createPromotion = (storeID, promotionInfo) => {
 export const updatePromotion = (promotionID, promotionInfo) => {
     return async (dispatch) => {
         try {
+            const token = localStorage.getItem('token');
             const response = await axios.put(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/promotions/promotion-management/update/${promotionID}`, promotionInfo, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    'Authorization': `Bearer ${token}`,
+                    'Content-type': 'application/json'
                 }
             });
             if (response.status !== 200) {
@@ -127,8 +130,9 @@ export const updatePromotion = (promotionID, promotionInfo) => {
             const promotion = response.data;
             dispatch({
                 type: UPDATE_PROMOTION,
-                payload: 'Cập nhật khuyến mãi thành công'
+                payload: promotion
             });
+            return promotion;
         } catch (error) {
             console.error("Update promotion failed:", error);
             return Promise.reject(error);
