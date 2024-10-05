@@ -25,7 +25,7 @@ const Header = ({ username, avatarUrl }) => {
 
     const fetchStoreData = async (storeID) => {
         try {
-            const response = await axios.get(`http://localhost:8080/api/seller/store/store-management/get-by-id?storeID=${storeID}`,
+            const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/store/store-management/get-by-id?storeID=${storeID}`,
                 {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,

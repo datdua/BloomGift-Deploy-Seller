@@ -156,8 +156,8 @@ const AddProduct = () => {
                                             <Col span={6}>
                                                 <Form.Item
                                                     {...restField}
-                                                    name={[name, 'sizeQuanity']}
-                                                    fieldKey={[fieldKey, 'sizeQuanity']}
+                                                    name={[name, 'sizeQuantity']}
+                                                    fieldKey={[fieldKey, 'sizeQuantity']}
                                                     rules={[{ required: true, message: 'Quantity required' }]}
                                                 >
                                                     <InputNumber min={0} placeholder="Quantity" style={{ width: '100%' }} />

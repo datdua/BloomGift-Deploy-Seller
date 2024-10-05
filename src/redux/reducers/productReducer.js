@@ -3,6 +3,7 @@ import { FETCH_PRODUCTS_SUCCESS, GET_ALL_PRODUCTS, GET_PRODUCTS_BY_ID, UPDATE_PR
 const initState = {
   products: null,
   selectedProduct: null,
+  isAuthorized: false,
   loading: false,
   error: null
 };
@@ -34,6 +35,7 @@ const productReducer = (state = initState, action) => {
       return {
         ...state,
         selectedProduct: action.payload,
+        isAuthorized: true,
         loading: false,
         error: null,
       };
