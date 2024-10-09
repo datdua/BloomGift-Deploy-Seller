@@ -11,6 +11,7 @@ const { Title } = Typography;
 const AddProduct = () => {
     const dispatch = useDispatch();
     const [imageFiles, setImageFiles] = useState([]);
+    const [hasSizes, setHasSizes] = useState(false); // Trạng thái để theo dõi xem có kích thước nào được thêm hay không
 
     const handleUpload = (info) => {
         if (info.file.status === 'done') {
@@ -43,7 +44,7 @@ const AddProduct = () => {
             categoryName: values.categoryName,
             storeID: localStorage.getItem('storeID'),
             productStatus: values.productStatus,
-            price: values.price,
+            price: hasSizes ? null : values.price, // Nếu có kích thước, giá sản phẩm sẽ là null
             sizes: sizes,
         };
 
@@ -69,8 +70,8 @@ const AddProduct = () => {
                     <Col span={12}>
                         <Form.Item
                             name="productName"
-                            label="Product Name"
-                            rules={[{ required: true, message: 'Please input the product name!' }]}
+                            label="Tên Sản Phẩm"
+                            rules={[{ required: true, message: 'Làm ơn nhập tên sản phẩm!' }]}
                         >
                             <Input placeholder="Enter product name" />
                         </Form.Item>
@@ -78,8 +79,8 @@ const AddProduct = () => {
                     <Col span={12}>
                         <Form.Item
                             name="categoryName"
-                            label="Category"
-                            rules={[{ required: true, message: 'Please select a category!' }]}
+                            label="Loại Sản Phẩm"
+                            rules={[{ required: true, message: 'Làm ơn chọn loại sản phẩm!' }]}
                         >
                             <Select placeholder="Select category">
                                 <Option value="hoa">Hoa</Option>
@@ -91,38 +92,38 @@ const AddProduct = () => {
 
                 <Form.Item
                     name="description"
-                    label="Description"
-                    rules={[{ required: true, message: 'Please input the product description!' }]}
+                    label="Mô Tả"
+                    rules={[{ required: true, message: 'Vui lòng nhập mô tả sản phẩm!' }]}
                 >
-                    <TextArea rows={4} placeholder="Enter product description" />
+                    <TextArea rows={4} placeholder="Nhập mô tả sản phẩm" />
                 </Form.Item>
 
                 <Row gutter={16}>
                     <Col span={8}>
                         <Form.Item
                             name="colour"
-                            label="Colour"
-                            rules={[{ required: true, message: 'Please input the product colour!' }]}
+                            label="Sản phẩm bao gồm: "
+                            rules={[{ required: true, message: 'Vui lòng nhập sản phẩm bao gồm!' }]}
                         >
-                            <Input placeholder="Enter product colour" />
+                            <Input placeholder="Hoa hồng, nước hoa,..." />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item
                             name="price"
-                            label="Price"
-                            rules={[{ required: true, message: 'Please input the product price!' }]}
+                            label="Giá tổng"
+                            rules={[{ required: !hasSizes, message: 'Vui lòng nhập giá tổng!' }]}
                         >
-                            <InputNumber min={0} placeholder="Enter price" style={{ width: '100%' }} />
+                            <InputNumber min={0} placeholder="Nhập giá tổng" style={{ width: '100%' }} disabled={hasSizes} />
                         </Form.Item>
                     </Col>
                     <Col span={8}>
                         <Form.Item
                             name="quantity"
-                            label="Quantity"
-                            rules={[{ required: true, message: 'Please input the product quantity!' }]}
+                            label="Số lượng"
+                            rules={[{ required: true, message: 'Vui lòng nhập số lượng tổng!' }]}
                         >
-                            <InputNumber min={0} placeholder="Enter quantity" style={{ width: '100%' }} />
+                            <InputNumber min={0} placeholder="Nhập số lượng tổng" style={{ width: '100%' }} />
                         </Form.Item>
                     </Col>
                 </Row>
@@ -151,7 +152,7 @@ const AddProduct = () => {
                                                     fieldKey={[fieldKey, 'text']}
                                                     rules={[{ required: true, message: 'Size text required' }]}
                                                 >
-                                                    <Input placeholder="Size text" />
+                                                    <Input placeholder="Kích thước" />
                                                 </Form.Item>
                                             </Col>
                                             <Col span={6}>
@@ -161,7 +162,7 @@ const AddProduct = () => {
                                                     fieldKey={[fieldKey, 'price']}
                                                     rules={[{ required: true, message: 'Price required' }]}
                                                 >
-                                                    <InputNumber min={0} placeholder="Price" style={{ width: '100%' }} />
+                                                    <InputNumber min={0} placeholder="Giá kích thước" style={{ width: '100%' }} />
                                                 </Form.Item>
                                             </Col>
                                             <Col span={6}>
@@ -171,20 +172,29 @@ const AddProduct = () => {
                                                     fieldKey={[fieldKey, 'sizeQuantity']}
                                                     rules={[{ required: true, message: 'Quantity required' }]}
                                                 >
-                                                    <InputNumber min={0} placeholder="Quantity" style={{ width: '100%' }} />
+                                                    <InputNumber min={0} placeholder="Số lượng" style={{ width: '100%' }} />
                                                 </Form.Item>
                                             </Col>
                                             <Col span={6}>
-                                                <Button type="link" danger onClick={() => remove(name)}>
-                                                    Remove
+                                                <Button type="link" danger onClick={() => {
+                                                    remove(name);
+                                                    if (fields.length === 1) {
+                                                        setHasSizes(false); // Nếu không còn kích thước nào, cho phép nhập giá sản phẩm
+                                                    }
+                                                }}>
+                                                    Loại bỏ
                                                 </Button>
                                             </Col>
                                         </Row>
                                     </Card>
                                 ))}
                                 <Form.Item>
-                                    <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
-                                        Add Size
+                                    <Button type="dashed" onClick={() => {
+                                        add();
+                                        setHasSizes(true); // Khi thêm kích thước, vô hiệu hóa trường nhập giá sản phẩm
+                                        message.info('Giá sản phẩm sẽ được tính dựa trên các kích thước đã thêm.');
+                                    }} block icon={<PlusOutlined />}>
+                                        Thêm Kích Thước
                                     </Button>
                                 </Form.Item>
                             </>
@@ -196,25 +206,25 @@ const AddProduct = () => {
                     <Col span={12}>
                         <Form.Item
                             name="productStatus"
-                            label="Product Status"
+                            label="Trạng Thái của Sản Phẩm"
                             valuePropName="checked"
                         >
-                            <Switch checkedChildren="Active" unCheckedChildren="Inactive" />
+                            <Switch checkedChildren="Hoạt động" unCheckedChildren="Khóa" />
                         </Form.Item>
                     </Col>
                     <Col span={12}>
                         <Form.Item
                             name="featured"
-                            label="Featured"
+                            label="Đề Xuất"
                             valuePropName="checked"
                         >
-                            <Switch checkedChildren="Yes" unCheckedChildren="No" />
+                            <Switch checkedChildren="Có" unCheckedChildren="Không" />
                         </Form.Item>
                     </Col>
                 </Row>
 
                 <Form.Item
-                    label="Product Images"
+                    label="Hình ảnh sản phẩm"
                 >
                     <Upload
                         name="imageFiles"
@@ -228,7 +238,7 @@ const AddProduct = () => {
                     >
                         <div>
                             <PlusOutlined />
-                            <div style={{ marginTop: 8 }}>Upload</div>
+                            <div style={{ marginTop: 8 }}>Đăng hình</div>
                         </div>
                     </Upload>
                 </Form.Item>
