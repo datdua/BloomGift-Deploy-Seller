@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
-import { getProductsByStoreIDBySeller, getProductsByStoreIDWithStatusFalse, getProductsByStoreIDWithStatusTrue, deleteProduct } from '../../../redux/actions/productActions';
+import { fetchAllOrders, fetchOrderById, fetchOrderByStatus } from '../../../redux/actions/orderActions';
 import { Button, Input, Select, Table, Empty, Tabs } from 'antd';
 import { PlusOutlined, SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import UpdateProduct from './UpdateProduct';
 import Swal from 'sweetalert2';
 import './ProductList.css';
 
@@ -20,20 +19,19 @@ const ProductList = () => {
     const [selectedProductId, setSelectedProductId] = useState(null);
 
     useEffect(() => {
-        const storeID = localStorage.getItem('storeID');
-        dispatch(getProductsByStoreIDBySeller(storeID));
+        dispatch(getAllProducts());
     }, [dispatch]);
 
     const handleTabChange = (key) => {
         switch (key) {
             case 'all':
-                dispatch(getProductsByStoreIDBySeller(localStorage.getItem('storeID')));
+                dispatch(getAllProducts());
                 break;
             case 'active':
-                dispatch(getProductsByStoreIDWithStatusTrue(localStorage.getItem('storeID')));
+                dispatch(getProductByStatusTrue());
                 break;
             case 'violated':
-                dispatch(getProductsByStoreIDWithStatusFalse(localStorage.getItem('storeID')));
+                dispatch(getProductByStatusFalse());
                 break;
             default:
                 break;
@@ -64,7 +62,7 @@ const ProductList = () => {
                             'Sản phẩm đã được xóa thành công.',
                             'success'
                         );
-                        dispatch(getProductsByStoreIDBySeller(localStorage.getItem('storeID')));
+                        dispatch(getAllProducts());
                     })
                     .catch((error) => {
                         Swal.fire(
@@ -116,7 +114,7 @@ const ProductList = () => {
             title: 'Mô tả',
             key: 'description',
             dataIndex: 'description',
-            width: 800, 
+            width: 800,
             render: description => (
                 <span>
                     {description.length > 200 ? description.slice(0, 500) + '...' : description}
@@ -204,7 +202,7 @@ const ProductList = () => {
                         dataSource={filteredProducts}
                         rowKey="productID"
                         locale={customLocale}
-                        pagination={{ pageSize: 10 }} 
+                        pagination={{ pageSize: 10 }}
                     />
                 </TabPane>
             </Tabs>
