@@ -113,7 +113,7 @@ export const createProduct = (productRequest, imageFiles) => {
       });
 
       const response = await axios.post(
-        'https://bloomgift-bloomgift.azuremicroservices.io/api/product/create',
+        'http://localhost:8080/api/product/create',
         formData,
         {
           headers: {

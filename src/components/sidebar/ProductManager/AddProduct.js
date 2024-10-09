@@ -83,7 +83,7 @@ const AddProduct = () => {
                         >
                             <Select placeholder="Select category">
                                 <Option value="hoa">Hoa</Option>
-                                <Option value="qua">Quà</Option>
+                                <Option value="quà">Quà</Option>
                             </Select>
                         </Form.Item>
                     </Col>
