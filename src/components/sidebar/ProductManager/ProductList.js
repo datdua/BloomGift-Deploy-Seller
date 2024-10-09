@@ -103,7 +103,7 @@ const ProductList = () => {
             title: 'Giá',
             dataIndex: 'price',
             key: 'price',
-            render: (price) => `${price.toFixed(2)} VNĐ`,
+            render: (price) => price != null ? `${price.toFixed(2)} VNĐ` : 'N/A',
             sorter: (a, b) => a.price - b.price,
         },
         {
