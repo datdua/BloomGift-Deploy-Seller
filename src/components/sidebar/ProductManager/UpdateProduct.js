@@ -67,6 +67,16 @@ const UpdateProduct = ({ visible, onCancel, productID }) => {
                 // Kiểm tra nếu không còn kích thước
                 const sizes = values.sizes && values.sizes.length > 0 ? values.sizes : [];
 
+                // Kiểm tra tổng số lượng các kích thước so với tổng số lượng sản phẩm
+                if (sizes.length > 0) {
+                    const totalSizeQuantity = sizes.reduce((total, size) => total + (size.sizeQuantity || 0), 0);
+                    if (totalSizeQuantity !== values.quantity) {
+                        message.error('Tổng số lượng size không bằng tổng số lượng sản phẩm!');
+                        setLoading(false);
+                        return;
+                    }
+                }
+
                 // Loại bỏ thuộc tính images khỏi đối tượng values
                 const { images, ...productRequest } = values;
 
