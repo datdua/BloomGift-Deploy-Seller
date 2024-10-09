@@ -12,6 +12,7 @@ const StoreProfile = () => {
     const { addToast } = useToasts();
     const [isEditing, setIsEditing] = useState(false);
     const [editedInfo, setEditedInfo] = useState({});
+    const [storeAvatar, setStoreAvatar] = useState(null);
 
     useEffect(() => {
         const storeID = localStorage.getItem('storeID');
@@ -27,14 +28,19 @@ const StoreProfile = () => {
     const handleInputChange = (field, value) => {
         setEditedInfo({
             ...editedInfo,
-            [field]: value
+            [field]: value,
         });
+    };
+
+    // Handle file input change
+    const handleFileChange = (e) => {
+        setStoreAvatar(e.target.files[0]);
     };
 
     const handleSave = async () => {
         const storeID = localStorage.getItem('storeID');
         try {
-            await dispatch(updateSellerInfo(storeID, editedInfo));
+            await dispatch(updateSellerInfo(storeID, editedInfo, storeAvatar)); // Pass avatar file
             await dispatch(fetchSellerInfo(storeID));
             addToast('Cập nhật thông tin thành công!', { appearance: 'success' });
             setIsEditing(false);
@@ -46,6 +52,7 @@ const StoreProfile = () => {
     const handleCancel = () => {
         setIsEditing(false);
         setEditedInfo(sellerInfo);
+        setStoreAvatar(null); // Reset file input
     };
 
     const handleTabChange = (tab) => {
@@ -63,6 +70,7 @@ const StoreProfile = () => {
                     setIsEditing(false);
                     setActiveTab(tab);
                     setEditedInfo(sellerInfo);
+                    setStoreAvatar(null);
                 }
             });
         } else {
@@ -90,22 +98,39 @@ const StoreProfile = () => {
                         </div>
                         <div className="info-row">
                             <span>Logo của Shop:</span>
-                            {sellerInfo?.storeAvatar ? (
-                                <img src={sellerInfo.storeAvatar} alt="Shop Logo" width="100" height="100" className="rounded-circle" />
+                            {isEditing ? (
+                                <>
+                                    <input
+                                        type="file"
+                                        onChange={handleFileChange} // Handle file upload
+                                    />
+                                    {storeAvatar && (
+                                        <img
+                                            src={URL.createObjectURL(storeAvatar)}
+                                            alt="Preview"
+                                            width="100"
+                                            height="100"
+                                            className="rounded-circle"
+                                        />
+                                    )}
+                                </>
                             ) : (
-                                <div className="default-logo">P</div>
+                                sellerInfo?.storeAvatar ? (
+                                    <img src={sellerInfo.storeAvatar} alt="Shop Logo" width="100" height="100" className="rounded-circle" />
+                                ) : (
+                                    <div className="default-logo">P</div>
+                                )
                             )}
                         </div>
-
                         <div className="info-row">
                             <span>Mô tả Shop:</span>
                             {isEditing ? (
                                 <textarea
-                                    value={editedInfo.description || ''}
-                                    onChange={(e) => handleInputChange('description', e.target.value)}
+                                    value={editedInfo.storeDescription || ''}
+                                    onChange={(e) => handleInputChange('storeDescription', e.target.value)}
                                 />
                             ) : (
-                                <span>{sellerInfo?.description || ''}</span>
+                                    <span>{sellerInfo?.storeDescription || ''}</span>
                             )}
                         </div>
 

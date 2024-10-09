@@ -3,12 +3,13 @@ import { useDispatch } from 'react-redux';
 import { Modal, Form, Input, InputNumber, Switch, Upload, Button, message, Row, Col, Card, Divider, Space } from 'antd';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
-import { updateProduct, getProductByID } from '../../../redux/actions/productActions';
+import { updateProduct, getProductByID, deleteProductImage } from '../../../redux/actions/productActions';
 
 const UpdateProduct = ({ visible, onCancel, productID }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [fileList, setFileList] = useState([]);
+    const [deletedFileList, setDeletedFileList] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -33,11 +34,12 @@ const UpdateProduct = ({ visible, onCancel, productID }) => {
                         })),
                     });
                     setFileList(product.images.map((img, index) => ({
-                        uid: -index,
+                        uid: img.imageID,
                         name: `image-${index}.png`,
                         status: 'done',
                         url: img.productImage,
                     })));
+
                     setLoading(false);
                 })
                 .catch((error) => {
@@ -61,10 +63,16 @@ const UpdateProduct = ({ visible, onCancel, productID }) => {
         }).then((result) => {
             if (result.isConfirmed) {
                 setLoading(true);
-                const productRequest = {
-                    ...values,
-                    categoryName: values.categoryName || form.getFieldValue('categoryName'),
-                };
+
+                // Kiểm tra nếu không còn kích thước
+                const sizes = values.sizes && values.sizes.length > 0 ? values.sizes : null;
+
+                // Loại bỏ thuộc tính images khỏi đối tượng values
+                const { images, ...productRequest } = values;
+
+                productRequest.sizes = sizes;  // Gán sizes là null nếu không còn kích thước
+                productRequest.categoryName = values.categoryName || form.getFieldValue('categoryName');
+
                 const imageFiles = fileList.filter(file => file.originFileObj).map(file => file.originFileObj);
 
                 dispatch(updateProduct(productID, productRequest, imageFiles))
@@ -89,13 +97,38 @@ const UpdateProduct = ({ visible, onCancel, productID }) => {
         });
     };
 
-    const handleFileChange = ({ fileList: newFileList }) => setFileList(newFileList);
+    const handleFileChange = ({ fileList: newFileList, file }) => {
+        // Kiểm tra nếu file bị xóa (status là "removed")
+        if (file.status === 'removed' && file.url) {
+            // Lưu trữ ảnh bị xóa tạm thời
+            setDeletedFileList([...deletedFileList, file]);
+
+            // Xóa ảnh bằng cách gọi API xóa
+            dispatch(deleteProductImage(productID, file.uid))
+                .then(() => {
+                    message.success('Ảnh đã được xóa thành công');
+                })
+                .catch((error) => {
+                    message.error('Xóa ảnh thất bại');
+                    console.error('Delete image failed:', error);
+                });
+        }
+
+        setFileList(newFileList);
+    };
+
+    const handleCancel = () => {
+        // Khôi phục lại danh sách ảnh đã bị xóa tạm thời
+        setFileList([...fileList, ...deletedFileList]);
+        setDeletedFileList([]);
+        onCancel();
+    };
 
     return (
         <Modal
             visible={visible}
             title="Cập nhật sản phẩm"
-            onCancel={onCancel}
+            onCancel={handleCancel}
             onOk={() => form.submit()}
             confirmLoading={loading}
             width={1000}

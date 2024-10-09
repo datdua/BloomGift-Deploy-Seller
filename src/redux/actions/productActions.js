@@ -9,6 +9,9 @@ export const UPDATE_PRODUCT_SUCCESS = "UPDATE_PRODUCT_SUCCESS";
 export const UPDATE_PRODUCT_FAILURE = "UPDATE_PRODUCT_FAILURE";
 export const DELETE_PRODUCT_SUCCESS = "DELETE_PRODUCT_SUCCESS";
 export const DELETE_PRODUCT_FAILURE = "DELETE_PRODUCT_FAILURE";
+export const GET_PRODUCTS_BY_STOREID = "GET_PRODUCTS_BY_STOREID";
+export const GET_PRODUCTS_BY_STOREID_WITH_STATUS = "GET_PRODUCTS_BY_STOREID_WITH_STATUS";
+export const GET_PRODUCTS_BY_STOREID_BY_SELLER = "GET_PRODUCTS_BY_STOREID_BY_SELLER";
 
 
 const fetchProductsSuccess = products => ({
@@ -216,4 +219,127 @@ export const deleteProduct = (productID) => {
       return Promise.reject(error);
     }
   };
+};
+
+export const getProductsByStoreID = (storeID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/products/store/${storeID}`);
+      if (response.status === 200) {
+        const products = response.data;
+        dispatch({
+          type: GET_PRODUCTS_BY_STOREID,
+          payload: products,
+        });
+        return products;
+      }
+      throw new Error('Failed to get products');
+    }
+    catch (error) {
+      console.error('Get products failed:', error);
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const deleteProductImage = (productID, imageID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.delete(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/delete-image/${imageID}?productID=${productID}`);
+      if (response.status === 200) {
+        dispatch({
+          type: DELETE_PRODUCT_SUCCESS,
+          payload: 'Image deleted successfully',
+        });
+      } else {
+        throw new Error('Failed to delete image');
+      }
+    } catch (error) {
+      console.error('Delete image failed:', error);
+      dispatch({
+        type: DELETE_PRODUCT_FAILURE,
+        payload: error.message,
+      });
+      return Promise.reject(error);
+    }
+  };
+}
+
+export const getProductsByStoreIDBySeller = (storeID) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/get-product-by-store/${storeID}`,{
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+    });
+      if (response.status === 200) {
+        const products = response.data;
+        dispatch({
+          type: GET_PRODUCTS_BY_STOREID_BY_SELLER,
+          payload: products,
+        });
+        return products;
+      }
+      throw new Error('Failed to get products');
+    }
+    catch (error) {
+      console.error('Get products failed:', error);
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getProductsByStoreIDWithStatusTrue = (storeID, productStatus) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/get-product-by-store-and-status/${storeID}/true`,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          }
+        }
+      );
+      if (response.status === 200) {
+        const products = response.data;
+        dispatch({
+          type: GET_PRODUCTS_BY_STOREID_WITH_STATUS,
+          payload: products,
+        });
+        return products;
+      }
+      throw new Error('Failed to get products');
+    }
+    catch (error) {
+      console.error('Get products failed:', error);
+      return Promise.reject(error);
+    }
+  }
+};
+
+export const getProductsByStoreIDWithStatusFalse = (storeID, productStatus) => {
+  return async (dispatch) => {
+    try {
+      const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/product/get-product-by-store-and-status/${storeID}/false`,
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          }
+        }
+      );
+      if (response.status === 200) {
+        const products = response.data;
+        dispatch({
+          type: GET_PRODUCTS_BY_STOREID_WITH_STATUS,
+          payload: products,
+        });
+        return products;
+      }
+      throw new Error('Failed to get products');
+    }
+    catch (error) {
+      console.error('Get products failed:', error);
+      return Promise.reject(error);
+    }
+  }
 };

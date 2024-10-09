@@ -22,6 +22,17 @@ const AddProduct = () => {
     };
 
     const onFinish = (values) => {
+        const sizes = values.sizes || [];
+
+        // Nếu có size, kiểm tra tổng số lượng size so với tổng số lượng sản phẩm
+        if (sizes.length > 0) {
+            const totalSizeQuantity = sizes.reduce((total, size) => total + (size.sizeQuantity || 0), 0);
+            if (totalSizeQuantity !== values.quantity) {
+                message.error('Tổng số lượng size không bằng tổng số lượng sản phẩm!');
+                return;
+            }
+        }
+
         const productRequest = {
             discount: values.discount || 0,
             description: values.description,
@@ -33,7 +44,7 @@ const AddProduct = () => {
             storeID: localStorage.getItem('storeID'),
             productStatus: values.productStatus,
             price: values.price,
-            sizes: values.sizes,
+            sizes: sizes,
         };
 
         dispatch(createProduct(productRequest, imageFiles))

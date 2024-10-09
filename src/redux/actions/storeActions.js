@@ -38,7 +38,8 @@ export const fetchSellerInfo = (sellerId) => {
                     storeAvatar: storeData.storeAvatar,
                     identityCard: storeData.identityCard.trim(),
                     identityName: storeData.identityName,
-                    roleName: storeData.roleName
+                    roleName: storeData.roleName,
+                    storeDescription: storeData.storeDescription
                 }
             });
             return storeData;
@@ -49,32 +50,64 @@ export const fetchSellerInfo = (sellerId) => {
     }
 }
 
-export const updateSellerInfo = (sellerId, sellerInfo) => {
+export const updateSellerInfo = (sellerId, editedInfo, storeAvatar) => {
     return async (dispatch) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.put(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/store/store-management/update/${sellerId}`, sellerInfo, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (response.status !== 200) {
-                throw new Error(`Lỗi khi cập nhật dữ liệu: ${response.status}`);
+
+            const sellerInfoForBackend = {
+                storeName: editedInfo.storeName,
+                type: editedInfo.type,
+                storePhone: editedInfo.storePhone,
+                storeAddress: editedInfo.storeAddress,
+                email: editedInfo.email,
+                bankAccountName: editedInfo.bankAccountName,
+                bankNumber: editedInfo.bankNumber,
+                bankAddress: editedInfo.bankAddress,
+                taxNumber: editedInfo.taxNumber,
+                identityCard: editedInfo.identityCard,
+                identityName: editedInfo.identityName,
+                storeStatus: editedInfo.storeStatus,
+                storeDescription: editedInfo.storeDescription,
+                password: editedInfo.password
+            };
+
+            // Prepare FormData for multipart request
+            const formData = new FormData();
+            formData.append("storePutRequest", JSON.stringify(sellerInfoForBackend));
+            if (storeAvatar) {
+                formData.append("storeAvatar", storeAvatar); // Attach file if exists
             }
+
+            // Send the request with multipart data
+            const response = await axios.put(
+                `https://bloomgift-bloomgift.azuremicroservices.io/api/seller/store/store-management/update/${sellerId}`,
+                formData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.status !== 200) {
+                throw new Error(`Error updating store info: ${response.status}`);
+            }
+
             const updatedStoreData = response.data;
             dispatch({
                 type: UPDATE_SELLER_INFO,
-                payload: updatedStoreData
+                payload: updatedStoreData,
             });
             return updatedStoreData;
         } catch (error) {
-            console.error("Update seller info failed:", error);
+            console.error("Update store info failed:", error);
             return Promise.reject(error);
         }
-    }
+    };
 }
 
