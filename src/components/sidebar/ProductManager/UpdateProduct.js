@@ -65,12 +65,22 @@ const UpdateProduct = ({ visible, onCancel, productID }) => {
                 setLoading(true);
 
                 // Kiểm tra nếu không còn kích thước
-                const sizes = values.sizes && values.sizes.length > 0 ? values.sizes : null;
+                const sizes = values.sizes && values.sizes.length > 0 ? values.sizes : [];
+
+                // Kiểm tra tổng số lượng các kích thước so với tổng số lượng sản phẩm
+                if (sizes.length > 0) {
+                    const totalSizeQuantity = sizes.reduce((total, size) => total + (size.sizeQuantity || 0), 0);
+                    if (totalSizeQuantity !== values.quantity) {
+                        message.error('Tổng số lượng size không bằng tổng số lượng sản phẩm!');
+                        setLoading(false);
+                        return;
+                    }
+                }
 
                 // Loại bỏ thuộc tính images khỏi đối tượng values
                 const { images, ...productRequest } = values;
 
-                productRequest.sizes = sizes;  // Gán sizes là null nếu không còn kích thước
+                productRequest.sizes = sizes;  // Gán sizes là [] nếu không còn kích thước
                 productRequest.categoryName = values.categoryName || form.getFieldValue('categoryName');
 
                 const imageFiles = fileList.filter(file => file.originFileObj).map(file => file.originFileObj);
