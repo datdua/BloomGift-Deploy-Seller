@@ -12,7 +12,7 @@ export const fetchAllOrders = () => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.get('https://bloomgift-bloomgift.azuremicroservices.io/api/seller/order/order-management/get-all-order', {
+            const response = await axios.get('https://bloomgift-e5hva0bgc6aubaen.eastus-01.azurewebsites.net/api/seller/order/order-management/get-all-order', {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -40,7 +40,7 @@ export const fetchOrderById = (orderID) => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/order/order-management/get-order-by-id/${orderID}`, {
+            const response = await axios.get(`https://bloomgift-e5hva0bgc6aubaen.eastus-01.azurewebsites.net/api/seller/order/order-management/get-order-by-id/${orderID}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -68,7 +68,7 @@ export const fetchOrderByStatus = (orderStatus) => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.get(`https://bloomgift-bloomgift.azuremicroservices.io/api/seller/order/order-management/get-order-by-status/${orderStatus}`, {
+            const response = await axios.get(`https://bloomgift-e5hva0bgc6aubaen.eastus-01.azurewebsites.net/api/seller/order/order-management/get-order-by-status/${orderStatus}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
