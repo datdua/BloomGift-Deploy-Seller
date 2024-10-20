@@ -11,7 +11,7 @@ export const fetchSellerInfo = (sellerId) => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const response = await axios.get('https://bloomgift-e5hva0bgc6aubaen.eastus-01.azurewebsites.net/api/seller/store/store-management/get-by-id', {
+            const response = await axios.get('https://bloomgift2-hkdra9cyapase2cy.southeastasia-01.azurewebsites.net/api/seller/store/store-management/get-by-id', {
                 params: { storeID: sellerId },
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -84,7 +84,7 @@ export const updateSellerInfo = (sellerId, editedInfo, storeAvatar) => {
 
             // Send the request with multipart data
             const response = await axios.put(
-                `https://bloomgift-e5hva0bgc6aubaen.eastus-01.azurewebsites.net/api/seller/store/store-management/update/${sellerId}`,
+                `https://bloomgift2-hkdra9cyapase2cy.southeastasia-01.azurewebsites.net/api/seller/store/store-management/update/${sellerId}`,
                 formData,
                 {
                     headers: {
