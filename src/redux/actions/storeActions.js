@@ -111,3 +111,46 @@ export const updateSellerInfo = (sellerId, editedInfo, storeAvatar) => {
     };
 }
 
+export const fetchCountAccount = async () => {
+    try {
+        const response = await axios.get(`https://bloomgift2-hkdra9cyapase2cy.southeastasia-01.azurewebsites.net/api/admin/role-management/customer-count`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            }
+        );
+
+        if (response.status !== 200) {
+            throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error("Fetch account count failed:", error);
+        return Promise.reject(error);
+    }
+};
+
+export const fetchCountStoresByStatus = async () => {
+    const storeStatus = "Đã kích hoạt";
+    try {
+        const encodedStatus = encodeURIComponent(storeStatus);
+        const response = await axios.get(`https://bloomgift2-hkdra9cyapase2cy.southeastasia-01.azurewebsites.net/api/admin/role-management/seller-count?storeStatus=${encodedStatus}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            }
+        );
+
+        if (response.status !== 200) {
+            throw new Error(`Lỗi khi nhận dữ liệu: ${response.status}`);
+        }
+
+        return response.data;
+    } catch (error) {
+        console.error("Fetch store count failed:", error);
+        return Promise.reject(error);
+    }
+};

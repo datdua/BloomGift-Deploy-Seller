@@ -16,6 +16,7 @@ import StoreProfile from "./components/sidebar/ProductManager/StoreProfile";
 import ProductList from "./components/sidebar/ProductManager/ProductList";
 import PromotionList from "./components/sidebar/PromotionManager/PromotionList";
 import AddProduct from "./components/sidebar/ProductManager/AddProduct";
+import OrderList from "./components/sidebar/OrderManager/OrderList";
 import LoginPage from "./pages/other/Login";
 import UpdateProduct from "./components/sidebar/ProductManager/UpdateProduct";
 
@@ -179,6 +180,7 @@ const App = (props) => {
                       <Route path="/banhang/shop-management" component={ShopManagement} />
                       <Route path="/banhang/shop-profile" component={StoreProfile} />
                       <Route path="/banhang/all-products" component={ProductList} />
+                      <Route path="/banhang/order-management" component={OrderList} />
                       <Route path="/banhang/add-product" component={AddProduct} />
                       <Route path="/banhang/all-promotion" component={PromotionList} />
                     </Switch>

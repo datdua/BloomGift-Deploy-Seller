@@ -47,17 +47,11 @@ const SalerSidebar = ({ children }) => {
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<House />} component={<NavLink to="/banhang/dashboard" />}>
                             Thống Kê
                         </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Gem />} component={<NavLink to="/banhang/shop-management" />}>
-                            Shop Management
-                        </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/all-promotion" />}>
                             Quản Lý Khuyến Mãi
                         </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/banhang/order-management" />}>
-                            Order Management
-                        </MenuItem>
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<BarChart />} component={<NavLink to="/banhang/reports" />}>
-                            Reports
+                            Quản Lý Đơn Hàng
                         </MenuItem>
                         <SubMenu label="Quản Lý Sản Phẩm " style={{ paddingLeft: "0px" }} icon={<BoxSeam />}>
                             <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/banhang/all-products" />}>
