@@ -1,147 +1,135 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { fetchAllOrders, fetchOrderById, fetchOrderByStatus } from '../../../redux/actions/orderActions';
-import { Button, Input, Select, Table, Empty, Tabs } from 'antd';
-import { PlusOutlined, SearchOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { fetchAllOrdersByStoreID, acceptOrder, completedOrder, rejectOrder } from '../../../redux/actions/orderActions';
+import { Button, Input, Select, Table, Empty } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
-import './ProductList.css';
+
 
 const { Option } = Select;
-const { TabPane } = Tabs;
 
-const ProductList = () => {
+const OrderList = () => {
     const dispatch = useDispatch();
-    const products = useSelector(state => state.productData.products) || [];
+    const orders = useSelector(state => state.orders.orders) || [];
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('');
-    const [updateModalVisible, setUpdateModalVisible] = useState(false);
-    const [selectedProductId, setSelectedProductId] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState('');
+
+    const storeID = localStorage.getItem('storeID');
 
     useEffect(() => {
-        dispatch(getAllProducts());
-    }, [dispatch]);
+        dispatch(fetchAllOrdersByStoreID(storeID));
+    }, [dispatch, storeID]);
 
-    const handleTabChange = (key) => {
-        switch (key) {
-            case 'all':
-                dispatch(getAllProducts());
-                break;
-            case 'active':
-                dispatch(getProductByStatusTrue());
-                break;
-            case 'violated':
-                dispatch(getProductByStatusFalse());
-                break;
-            default:
-                break;
-        }
+    const handleAcceptOrder = (orderID) => {
+        dispatch(acceptOrder(orderID))
+            .then(() => {
+                Swal.fire('Thành công!', 'Đơn hàng đã được chấp nhận.', 'success');
+                dispatch(fetchAllOrdersByStoreID(storeID));
+            })
+            .catch((error) => {
+                Swal.fire('Lỗi!', 'Có lỗi xảy ra khi chấp nhận đơn hàng.', 'error');
+            });
     };
 
-    const handleUpdateClick = (productId) => {
-        setSelectedProductId(productId);
-        setUpdateModalVisible(true);
+    const handleCompleteOrder = (orderID) => {
+        dispatch(completedOrder(orderID))
+            .then(() => {
+                Swal.fire('Thành công!', 'Đơn hàng đã được hoàn tất.', 'success');
+                dispatch(fetchAllOrdersByStoreID(storeID));
+            })
+            .catch((error) => {
+                Swal.fire('Lỗi!', 'Có lỗi xảy ra khi hoàn tất đơn hàng.', 'error');
+            });
     };
 
-    const handleDeleteClick = (productId) => {
+    const handleRejectOrder = (orderID) => {
         Swal.fire({
-            title: 'Bạn có chắc chắn muốn xóa sản phẩm này?',
-            text: "Hành động này không thể hoàn tác!",
-            icon: 'warning',
+            title: 'Nhập lý do từ chối',
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Có, xóa nó!',
-            cancelButtonText: 'Hủy'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                dispatch(deleteProduct(productId))
+            confirmButtonText: 'Từ chối',
+            cancelButtonText: 'Hủy',
+            showLoaderOnConfirm: true,
+            preConfirm: (note) => {
+                return dispatch(rejectOrder(orderID, note))
                     .then(() => {
-                        Swal.fire(
-                            'Đã xóa!',
-                            'Sản phẩm đã được xóa thành công.',
-                            'success'
-                        );
-                        dispatch(getAllProducts());
+                        Swal.fire('Thành công!', 'Đơn hàng đã bị từ chối.', 'success');
+                        dispatch(fetchAllOrdersByStoreID(storeID));
                     })
                     .catch((error) => {
-                        Swal.fire(
-                            'Lỗi!',
-                            'Có lỗi xảy ra khi xóa sản phẩm.',
-                            'error'
-                        );
+                        Swal.showValidationMessage(`Request failed: ${error}`);
                     });
-            }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
         });
     };
 
     const columns = [
         {
-            title: 'Tên sản phẩm',
-            dataIndex: 'productName',
-            key: 'productName',
-            render: (text, record) => (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img
-                        src={record.images[0]?.productImage}
-                        alt={text}
-                        style={{ width: '50px', height: '50px', marginRight: '10px' }}
-                    />
-                    <span>{text}</span>
-                </div>
-            ),
+            title: 'Mã đơn hàng',
+            dataIndex: 'orderID',
+            key: 'orderID',
         },
         {
-            title: 'Doanh số',
-            dataIndex: 'sold',
-            key: 'sold',
-            sorter: (a, b) => a.sold - b.sold,
+            title: 'Tên khách hàng',
+            dataIndex: 'accountName',
+            key: 'accountName',
         },
         {
-            title: 'Giá',
-            dataIndex: 'price',
-            key: 'price',
-            render: (price) => `${price.toFixed(2)} VNĐ`,
-            sorter: (a, b) => a.price - b.price,
+            title: 'Số điện thoại',
+            dataIndex: 'phone',
+            key: 'phone',
         },
         {
-            title: 'Kho hàng',
-            dataIndex: 'quantity',
-            key: 'quantity',
-            sorter: (a, b) => a.quantity - b.quantity,
+            title: 'Địa chỉ giao hàng',
+            dataIndex: 'deliveryAddress',
+            key: 'deliveryAddress',
         },
         {
-            title: 'Mô tả',
-            key: 'description',
-            dataIndex: 'description',
-            width: 800,
-            render: description => (
-                <span>
-                    {description.length > 200 ? description.slice(0, 500) + '...' : description}
-                </span>
-            ),
+            title: 'Ngày bắt đầu',
+            dataIndex: 'startDate',
+            key: 'startDate',
+            render: (date) => new Date(date).toLocaleString(),
+        },
+        {
+            title: 'Ngày giao hàng',
+            dataIndex: 'deliveryDateTime',
+            key: 'deliveryDateTime',
+            render: (date) => new Date(date).toLocaleString(),
+        },
+        {
+            title: 'Tổng giá trị đơn hàng',
+            dataIndex: 'oderPrice',
+            key: 'oderPrice',
+            render: (price) => price != null ? `${price.toFixed(2)} VNĐ` : 'N/A',
+        },
+        {
+            title: 'Trạng thái đơn hàng',
+            dataIndex: 'orderStatus',
+            key: 'orderStatus',
         },
         {
             title: 'Thao tác',
             key: 'action',
-            width: 150,
             render: (_, record) => (
                 <>
-                    <Button type="link" onClick={() => handleUpdateClick(record.productID)} icon={<EditOutlined />}>Chỉnh sửa</Button>
-                    <Button type="link" danger onClick={() => handleDeleteClick(record.productID)} icon={<DeleteOutlined />}>
-                        Xóa
-                    </Button>
+                    <Button type="link" onClick={() => handleAcceptOrder(record.orderID)}>Chấp nhận</Button>
+                    <Button type="link" onClick={() => handleCompleteOrder(record.orderID)}>Hoàn tất</Button>
+                    <Button type="link" danger onClick={() => handleRejectOrder(record.orderID)}>Từ chối</Button>
                 </>
             ),
         },
     ];
 
-    const filteredProducts = products.filter(product =>
-        product.productName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedCategory === '' || product.categoryName === selectedCategory)
+    const filteredOrders = orders.filter(order =>
+        order.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (selectedStatus === '' || order.orderStatus === selectedStatus)
     );
 
-    const categories = [...new Set(products.map(product => product.categoryName))];
+    const statuses = [...new Set(orders.map(order => order.orderStatus))];
 
     const customLocale = {
         triggerDesc: 'Nhấn để sắp xếp giảm dần',
@@ -150,69 +138,37 @@ const ProductList = () => {
         emptyText: (
             <Empty
                 image={Empty.PRESENTED_IMAGE_DEFAULT}
-                description="Không tìm thấy sản phẩm"
+                description="Không tìm thấy đơn hàng"
             />
         ),
     };
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Sản phẩm</h1>
+            <h1>Đơn hàng</h1>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-                <Select defaultValue="" style={{ width: 200, borderColor: '#F56285' }} onChange={value => setSelectedCategory(value)}>
-                    <Option value="">Tất cả danh mục</Option>
-                    {categories.map(category => (
-                        <Option key={category} value={category}>{category}</Option>
+                <Select defaultValue="" style={{ width: 200, borderColor: '#F56285' }} onChange={value => setSelectedStatus(value)}>
+                    <Option value="">Tất cả trạng thái</Option>
+                    {statuses.map(status => (
+                        <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>
-                <NavLink to="/banhang/add-product">
-                    <Button type="primary" style={{ background: '#F56285', borderColor: '#F56285' }} icon={<PlusOutlined />}>
-                        Thêm 1 sản phẩm mới
-                    </Button>
-                </NavLink>
             </div>
             <Input
-                placeholder="Tìm tên sản phẩm, SKU sản phẩm, SKU phân loại, Mã sản phẩm"
+                placeholder="Tìm tên khách hàng, số điện thoại"
                 onChange={e => setSearchTerm(e.target.value)}
                 style={{ marginBottom: '20px', borderColor: '#F56285' }}
                 suffix={<SearchOutlined style={{ fontSize: '18px', color: '#bfbfbf' }} />}
             />
-            <Tabs defaultActiveKey="all" onChange={handleTabChange}>
-                <TabPane tab="Tất cả" key="all">
-                    <Table
-                        columns={columns}
-                        dataSource={filteredProducts}
-                        rowKey="productID"
-                        locale={customLocale}
-                        pagination={{ pageSize: 10 }}
-                    />
-                </TabPane>
-                <TabPane tab="Đang Hoạt Động" key="active">
-                    <Table
-                        columns={columns}
-                        dataSource={filteredProducts}
-                        rowKey="productID"
-                        locale={customLocale}
-                        pagination={{ pageSize: 10 }}
-                    />
-                </TabPane>
-                <TabPane tab="Vi Phạm" key="violated">
-                    <Table
-                        columns={columns}
-                        dataSource={filteredProducts}
-                        rowKey="productID"
-                        locale={customLocale}
-                        pagination={{ pageSize: 10 }}
-                    />
-                </TabPane>
-            </Tabs>
-            <UpdateProduct
-                visible={updateModalVisible}
-                onCancel={() => setUpdateModalVisible(false)}
-                productID={selectedProductId}
+            <Table
+                columns={columns}
+                dataSource={filteredOrders}
+                rowKey="orderID"
+                locale={customLocale}
+                pagination={{ pageSize: 10 }}
             />
         </div>
     );
 };
 
-export default ProductList;
+export default OrderList;
