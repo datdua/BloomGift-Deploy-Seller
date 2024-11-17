@@ -6,6 +6,7 @@ import compareReducer from "./compareReducer";
 import storeReducer from "./storeReducer";
 import orderReducer from "./orderReducer";
 import promotionReducer from "./promotionReducer";
+import paymentReducer from "./paymentReducer";
 import { combineReducers } from "redux";
 import { createMultilanguageReducer } from "redux-multilanguage";
 
@@ -18,7 +19,8 @@ const rootReducer = combineReducers({
   orders: orderReducer,
   compareData: compareReducer,
   seller: storeReducer,
-  promotionData: promotionReducer
+  promotionData: promotionReducer,
+  paymentData: paymentReducer
 });
 
 export default rootReducer;

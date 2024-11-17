@@ -44,14 +44,14 @@ const SalerSidebar = ({ children }) => {
                         {collapsed ? '≡' : 'BloomGift'}
                     </Button>
                     <Menu iconShape="circle" menuItemStyles={menuItemStyles} >
-                        <MenuItem style={{ paddingLeft: "0px" }} icon={<House />} component={<NavLink to="/banhang/dashboard" />}>
-                            Thống Kê
-                        </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/all-promotion" />}>
                             Quản Lý Khuyến Mãi
                         </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/banhang/order-management" />}>
                             Quản Lý Đơn Hàng
+                        </MenuItem>
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<Box />} component={<NavLink to="/banhang/payment-management" />}>
+                            Quản Lý Hóa Đơn
                         </MenuItem>
                         <SubMenu label="Quản Lý Sản Phẩm " style={{ paddingLeft: "0px" }} icon={<BoxSeam />}>
                             <MenuItem style={{ paddingLeft: "15px" }} icon={<Box />} component={<NavLink to="/banhang/all-products" />}>
