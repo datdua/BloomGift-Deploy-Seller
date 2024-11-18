@@ -98,7 +98,7 @@ const OrderList = () => {
             title: 'Số điện thoại',
             dataIndex: 'phone',
             key: 'phone',
-            render: (phone) => `(+84) ${phone}`,
+            render: (phone) => `0${phone}`,
         },
         {
             title: 'Địa chỉ giao hàng',

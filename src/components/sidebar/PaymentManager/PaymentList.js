@@ -122,7 +122,7 @@ const PaymentList = () => {
             },
         },
         {
-            title: "Ghi chú",
+            title: "Ghi chú GD",
             dataIndex: "note",
             key: "note",
             render: (note) => note || "Không có ghi chú",
