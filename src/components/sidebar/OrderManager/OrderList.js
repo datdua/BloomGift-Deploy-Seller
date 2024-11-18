@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAllOrdersByStoreID, acceptOrder, completedOrder, rejectOrder } from '../../../redux/actions/orderActions';
-import { Button, Input, Select, Table, Empty } from 'antd';
+import { fetchAllOrdersByStoreID, acceptOrder, completedOrder, rejectOrder, fetchOrderById } from '../../../redux/actions/orderActions';
+import { Button, Input, Select, Table, Empty, Modal, Descriptions } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
-
 
 const { Option } = Select;
 
@@ -13,12 +12,24 @@ const OrderList = () => {
     const orders = useSelector(state => state.orders.orders) || [];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
     const storeID = localStorage.getItem('storeID');
 
     useEffect(() => {
         dispatch(fetchAllOrdersByStoreID(storeID));
     }, [dispatch, storeID]);
+
+    const showOrderDetails = async (orderID) => {
+        try {
+            const order = await dispatch(fetchOrderById(orderID));
+            setSelectedOrder(order);
+            setIsModalVisible(true);
+        } catch (error) {
+            console.error("Failed to fetch order details:", error);
+        }
+    };
 
     const handleAcceptOrder = (orderID) => {
         dispatch(acceptOrder(orderID))
@@ -72,6 +83,11 @@ const OrderList = () => {
             title: 'Mã đơn hàng',
             dataIndex: 'orderID',
             key: 'orderID',
+            render: (orderID) => (
+                <Button type="link" onClick={() => showOrderDetails(orderID)}>
+                    {orderID}
+                </Button>
+            ),
         },
         {
             title: 'Tên khách hàng',
@@ -82,6 +98,7 @@ const OrderList = () => {
             title: 'Số điện thoại',
             dataIndex: 'phone',
             key: 'phone',
+            render: (phone) => `0${phone}`,
         },
         {
             title: 'Địa chỉ giao hàng',
@@ -92,13 +109,31 @@ const OrderList = () => {
             title: 'Ngày bắt đầu',
             dataIndex: 'startDate',
             key: 'startDate',
-            render: (date) => new Date(date).toLocaleString(),
+            render: (date) => {
+                return new Date(date).toLocaleString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+            },
         },
         {
             title: 'Ngày giao hàng',
             dataIndex: 'deliveryDateTime',
             key: 'deliveryDateTime',
-            render: (date) => new Date(date).toLocaleString(),
+            render: (date) => {
+                return new Date(date).toLocaleString('vi-VN', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+            },
         },
         {
             title: 'Tổng giá trị đơn hàng',
@@ -143,6 +178,11 @@ const OrderList = () => {
         ),
     };
 
+    const handleModalClose = () => {
+        setIsModalVisible(false);
+        setSelectedOrder(null);
+    };
+
     return (
         <div style={{ padding: '20px' }}>
             <h1>Đơn hàng</h1>
@@ -167,6 +207,44 @@ const OrderList = () => {
                 locale={customLocale}
                 pagination={{ pageSize: 10 }}
             />
+            <Modal
+                title="Thông tin chi tiết đơn hàng"
+                visible={isModalVisible}
+                onCancel={handleModalClose}
+                footer={[
+                    <Button key="close" onClick={handleModalClose}>
+                        Đóng
+                    </Button>,
+                ]}
+            >
+                {selectedOrder ? (
+                    <>
+                        <Descriptions bordered column={1}>
+                            <Descriptions.Item label="Mã đơn hàng">{selectedOrder.orderID}</Descriptions.Item>
+                            <Descriptions.Item label="Giá">{selectedOrder.oderPrice.toLocaleString()} VNĐ</Descriptions.Item>
+                            <Descriptions.Item label="Trạng thái">{selectedOrder.orderStatus}</Descriptions.Item>
+                            <Descriptions.Item label="Ghi chú">{selectedOrder.note || "Không có ghi chú"}</Descriptions.Item>
+                            <Descriptions.Item label="Địa chỉ giao hàng">{selectedOrder.deliveryAddress}</Descriptions.Item>
+                            <Descriptions.Item label="Ngày giao hàng">{new Date(selectedOrder.deliveryDateTime).toLocaleString()}</Descriptions.Item>
+                            <Descriptions.Item label="Tên khách hàng">{selectedOrder.accountName}</Descriptions.Item>
+                            <Descriptions.Item label="Điện thoại">(+84) {selectedOrder.phone}</Descriptions.Item>
+                        </Descriptions>
+                        <h3 style={{ marginTop: "20px" }}>Thông tin sản phẩm</h3>
+                        <Descriptions bordered column={1}>
+                            {selectedOrder.orderDetails.map((detail) => (
+                                <React.Fragment key={detail.orderDetailID}>
+                                    <Descriptions.Item label="Tên sản phẩm">{detail.productName}</Descriptions.Item>
+                                    <Descriptions.Item label="Mã sản phẩm">{detail.productID}</Descriptions.Item>
+                                    <Descriptions.Item label="Số lượng">{detail.quantity}</Descriptions.Item>
+                                    <Descriptions.Item label="Tổng giá">{detail.productTotalPrice.toLocaleString()} VNĐ</Descriptions.Item>
+                                </React.Fragment>
+                            ))}
+                        </Descriptions>
+                    </>
+                ) : (
+                    <p>Đang tải...</p>
+                )}
+            </Modal>
         </div>
     );
 };
