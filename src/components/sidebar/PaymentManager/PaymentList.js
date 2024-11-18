@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPaymentByStore } from "../../../redux/actions/paymentActions";
 import { fetchOrderById } from "../../../redux/actions/orderActions";
-import { Button, Input, Select, Table, Empty, Image, Modal } from "antd";
+import { Button, Input, Select, Table, Empty, Image, Modal, Descriptions } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -12,6 +12,7 @@ const PaymentList = () => {
     const payments = useSelector((state) => state.paymentData.payments) || [];
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
+    const [selectedBank, setSelectedBank] = useState("");
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -77,19 +78,22 @@ const PaymentList = () => {
             title: "Ảnh thanh toán",
             dataIndex: "paymentImage",
             key: "paymentImage",
+            align: "center",
             render: (image) =>
                 image ? (
-                    <Image
-                        src={image}
-                        alt="Payment proof"
-                        style={{ width: 50, height: 50, objectFit: "cover" }}
-                        preview={{
-                            maskClassName: "customize-mask",
-                            mask: <div className="text-white">Xem</div>,
-                        }}
-                    />
+                    <div style={{ display: "flex", justifyContent: "center" }}>
+                        <Image
+                            src={image}
+                            alt="Payment proof"
+                            style={{ width: 50, height: 50, objectFit: "cover" }}
+                            preview={{
+                                maskClassName: "customize-mask",
+                                mask: <div className="text-white">Xem</div>,
+                            }}
+                        />
+                    </div>
                 ) : (
-                    "Chưa có ảnh"
+                    <div style={{ textAlign: "center" }}>Chưa có ảnh</div>
                 ),
         },
         {
@@ -129,8 +133,8 @@ const PaymentList = () => {
         (payment) =>
             (payment.storeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                 payment.bankName?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (selectedStatus === "" ||
-                payment.paymentStatus === (selectedStatus === "true"))
+            (selectedStatus === "" || payment.paymentStatus === (selectedStatus === "true")) &&
+            (selectedBank === "" || payment.bankName === selectedBank)
     );
 
     const customLocale = {
@@ -152,9 +156,9 @@ const PaymentList = () => {
 
     return (
         <div style={{ padding: "20px" }}>
-            <h1>Danh sách thanh toán</h1>
+            <h1>Danh sách giao dịch</h1>
             <div
-                style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}
+                style={{ display: "flex", gap:"20px", marginBottom: "20px" }}
             >
                 <Select
                     defaultValue=""
@@ -165,6 +169,16 @@ const PaymentList = () => {
                     <Option value="">Tất cả trạng thái</Option>
                     <Option value="true">Đã thanh toán</Option>
                     <Option value="false">Đang chờ xác thực</Option>
+                </Select>
+                <Select
+                    defaultValue=""
+                    style={{ width: 200 }}
+                    onChange={(value) => setSelectedBank(value)}
+                    className="border-pink-500"
+                >
+                    <Option value="">Tất cả ngân hàng</Option>
+                    <Option value="MOMO">MOMO</Option>
+                    <Option value="TPBANK">TPBANK</Option>
                 </Select>
             </div>
             <Input
@@ -185,9 +199,10 @@ const PaymentList = () => {
                 }}
             />
             <Modal
-                title="Thông tin chi tiết đơn hàng"
+                title={<span style={{ fontSize: '24px', fontWeight: 'bold' }}>Thông tin chi tiết đơn hàng</span>}
                 visible={isModalVisible}
                 onCancel={handleModalClose}
+                style={{ top: 20 }}
                 footer={[
                     <Button key="close" onClick={handleModalClose}>
                         Đóng
@@ -195,16 +210,29 @@ const PaymentList = () => {
                 ]}
             >
                 {selectedOrder ? (
-                    <div>
-                        <p><strong>Mã đơn hàng:</strong> {selectedOrder.orderID}</p>
-                        <p><strong>Giá:</strong> {selectedOrder.oderPrice.toLocaleString()} VNĐ</p>
-                        <p><strong>Trạng thái:</strong> {selectedOrder.orderStatus}</p>
-                        <p><strong>Ghi chú:</strong> {selectedOrder.note || "Không có ghi chú"}</p>
-                        <p><strong>Địa chỉ giao hàng:</strong> {selectedOrder.deliveryAddress}</p>
-                        <p><strong>Ngày giao hàng:</strong> {new Date(selectedOrder.deliveryDateTime).toLocaleString()}</p>
-                        <p><strong>Tên khách hàng:</strong> {selectedOrder.accountName}</p>
-                        <p><strong>Điện thoại:</strong> {selectedOrder.phone}</p>
-                    </div>
+                    <>
+                        <Descriptions bordered column={1}>
+                            <Descriptions.Item label="Mã đơn hàng">{selectedOrder.orderID}</Descriptions.Item>
+                            <Descriptions.Item label="Giá">{selectedOrder.oderPrice.toLocaleString()} VNĐ</Descriptions.Item>
+                            <Descriptions.Item label="Trạng thái">{selectedOrder.orderStatus}</Descriptions.Item>
+                            <Descriptions.Item label="Ghi chú">{selectedOrder.note || "Không có ghi chú"}</Descriptions.Item>
+                            <Descriptions.Item label="Địa chỉ giao hàng">{selectedOrder.deliveryAddress}</Descriptions.Item>
+                            <Descriptions.Item label="Ngày giao hàng">{new Date(selectedOrder.deliveryDateTime).toLocaleString()}</Descriptions.Item>
+                            <Descriptions.Item label="Tên khách hàng">{selectedOrder.accountName}</Descriptions.Item>
+                            <Descriptions.Item label="Điện thoại">(+84) {selectedOrder.phone}</Descriptions.Item>
+                        </Descriptions>
+                        <h3 style={{ marginTop: "20px", fontSize: '24px', fontWeight: 'bold' }}>Thông tin sản phẩm</h3>
+                        <Descriptions bordered column={1}>
+                            {selectedOrder.orderDetails.map((detail) => (
+                                <React.Fragment key={detail.orderDetailID}>
+                                    <Descriptions.Item label="Tên sản phẩm">{detail.productName}</Descriptions.Item>
+                                    <Descriptions.Item label="Mã sản phẩm">{detail.productID}</Descriptions.Item>
+                                    <Descriptions.Item label="Số lượng">{detail.quantity}</Descriptions.Item>
+                                    <Descriptions.Item label="Tổng giá">{detail.productTotalPrice.toLocaleString()} VNĐ</Descriptions.Item>
+                                </React.Fragment>
+                            ))}
+                        </Descriptions>
+                    </>
                 ) : (
                     <p>Đang tải...</p>
                 )}
