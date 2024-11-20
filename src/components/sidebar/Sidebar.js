@@ -44,6 +44,9 @@ const SalerSidebar = ({ children }) => {
                         {collapsed ? '≡' : 'BloomGift'}
                     </Button>
                     <Menu iconShape="circle" menuItemStyles={menuItemStyles} >
+                        <MenuItem style={{ paddingLeft: "0px" }} icon={<House />} component={<NavLink to="/banhang/dashboard" />}>
+                            Thống Kê
+                        </MenuItem>
                         <MenuItem style={{ paddingLeft: "0px" }} icon={<Heart />} component={<NavLink to="/banhang/all-promotion" />}>
                             Quản Lý Khuyến Mãi
                         </MenuItem>
