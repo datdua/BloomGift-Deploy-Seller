@@ -5,6 +5,7 @@ import { Button, Input, Select, Table, Empty, Modal, Descriptions, DatePicker } 
 import { SearchOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
 import moment from 'moment';
+import locale from 'antd/es/date-picker/locale/vi_VN';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -215,6 +216,13 @@ const OrderList = () => {
                     style={{ width: 300, borderColor: '#F56285' }}
                     onChange={handleDateChange}
                     format="DD/MM/YYYY"
+                    locale={{
+                        ...locale,
+                        lang: {
+                            ...locale.lang,
+                            rangePlaceholder: ['Ngày bắt đầu', 'Ngày kết thúc'],
+                        },
+                    }}
                 />
             </div>
             <Input
