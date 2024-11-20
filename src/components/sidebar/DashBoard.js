@@ -217,9 +217,9 @@ const Dashboard = () => {
                             <YAxis yAxisId="right" orientation="right" />
                             <Tooltip />
                             <Legend />
-                            <Bar yAxisId="left" dataKey="stores" name="Số cửa hàng" fill="#8884d8" />
-                            <Bar yAxisId="left" dataKey="accounts" name="Số khách hàng" fill="#82ca9d" />
-                            <Bar yAxisId="right" dataKey="revenue" name="Doanh thu" fill="#ffc658" />
+                            <Bar yAxisId="left" dataKey="stores" name="Số sản phẩm" fill="#8884d8" />
+                            <Bar yAxisId="left" dataKey="accounts" name="Số đơn hàng" fill="#82ca9d" />
+                            <Bar yAxisId="right" dataKey="revenue" name="Số giao dịch" fill="#ffc658" />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
