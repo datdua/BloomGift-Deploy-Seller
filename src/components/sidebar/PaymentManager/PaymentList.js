@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPaymentByStore } from "../../../redux/actions/paymentActions";
 import { fetchOrderById } from "../../../redux/actions/orderActions";
-import { Button, Input, Select, Table, Empty, Image, Modal, Descriptions } from "antd";
+import { Button, Input, Select, Table, Empty, Image, Modal, Descriptions, DatePicker } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
+import locale from 'antd/es/date-picker/locale/vi_VN'; // Import locale for Vietnamese
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const PaymentList = () => {
     const dispatch = useDispatch();
@@ -13,6 +15,7 @@ const PaymentList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [selectedBank, setSelectedBank] = useState("");
+    const [dateRange, setDateRange] = useState([null, null]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -29,6 +32,14 @@ const PaymentList = () => {
             setIsModalVisible(true);
         } catch (error) {
             console.error("Failed to fetch order details:", error);
+        }
+    };
+
+    const handleDateChange = (dates) => {
+        if (!dates || dates.length === 0) {
+            setDateRange([null, null]);
+        } else {
+            setDateRange(dates);
         }
     };
 
@@ -130,11 +141,17 @@ const PaymentList = () => {
     ];
 
     const filteredPayments = payments.filter(
-        (payment) =>
-            (payment.storeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                payment.bankName?.toLowerCase().includes(searchTerm.toLowerCase())) &&
-            (selectedStatus === "" || payment.paymentStatus === (selectedStatus === "true")) &&
-            (selectedBank === "" || payment.bankName === selectedBank)
+        (payment) => {
+            const paymentDate = new Date(payment.paymentDate);
+            const [start, end] = dateRange;
+            return (
+                (payment.storeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    payment.bankName?.toLowerCase().includes(searchTerm.toLowerCase())) &&
+                (selectedStatus === "" || payment.paymentStatus === (selectedStatus === "true")) &&
+                (selectedBank === "" || payment.bankName === selectedBank) &&
+                (!start || !end || (paymentDate >= start && paymentDate <= end))
+            );
+        }
     );
 
     const customLocale = {
@@ -158,7 +175,7 @@ const PaymentList = () => {
         <div style={{ padding: "20px" }}>
             <h1>Danh sách giao dịch</h1>
             <div
-                style={{ display: "flex", gap:"20px", marginBottom: "20px" }}
+                style={{ display: "flex", gap: "20px", marginBottom: "20px" }}
             >
                 <Select
                     defaultValue=""
@@ -180,6 +197,18 @@ const PaymentList = () => {
                     <Option value="MOMO">MOMO</Option>
                     <Option value="TPBANK">TPBANK</Option>
                 </Select>
+                <RangePicker
+                    style={{ width: 300, borderColor: '#F56285' }}
+                    onChange={handleDateChange}
+                    format="DD/MM/YYYY"
+                    locale={{
+                        ...locale,
+                        lang: {
+                            ...locale.lang,
+                            rangePlaceholder: ['Ngày bắt đầu', 'Ngày kết thúc'],
+                        },
+                    }}
+                />
             </div>
             <Input
                 placeholder="Tìm kiếm theo tên cửa hàng hoặc ngân hàng"

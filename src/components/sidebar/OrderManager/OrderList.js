@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOrdersByStoreID, acceptOrder, completedOrder, rejectOrder, fetchOrderById } from '../../../redux/actions/orderActions';
-import { Button, Input, Select, Table, Empty, Modal, Descriptions } from 'antd';
+import { Button, Input, Select, Table, Empty, Modal, Descriptions, DatePicker } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
+import moment from 'moment';
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 const OrderList = () => {
     const dispatch = useDispatch();
     const orders = useSelector(state => state.orders.orders) || [];
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedStatus, setSelectedStatus] = useState('');
+    const [dateRange, setDateRange] = useState([null, null]);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState(null);
 
@@ -78,6 +81,14 @@ const OrderList = () => {
         });
     };
 
+    const handleDateChange = (dates) => {
+        if (!dates || dates.length === 0) {
+            setDateRange([null, null]);
+        } else {
+            setDateRange(dates);
+        }
+    };
+
     const columns = [
         {
             title: 'Mã đơn hàng',
@@ -98,7 +109,7 @@ const OrderList = () => {
             title: 'Số điện thoại',
             dataIndex: 'phone',
             key: 'phone',
-            render: (phone) => `0${phone}`,
+            render: (phone) => `(+84) ${phone}`,
         },
         {
             title: 'Địa chỉ giao hàng',
@@ -119,6 +130,7 @@ const OrderList = () => {
                     hour12: false
                 });
             },
+            sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
         },
         {
             title: 'Ngày giao hàng',
@@ -134,6 +146,7 @@ const OrderList = () => {
                     hour12: false
                 });
             },
+            sorter: (a, b) => new Date(a.deliveryDateTime) - new Date(b.deliveryDateTime),
         },
         {
             title: 'Tổng giá trị đơn hàng',
@@ -159,10 +172,15 @@ const OrderList = () => {
         },
     ];
 
-    const filteredOrders = orders.filter(order =>
-        order.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (selectedStatus === '' || order.orderStatus === selectedStatus)
-    );
+    const filteredOrders = orders.filter(order => {
+        const orderDate = new Date(order.startDate);
+        const [start, end] = dateRange;
+        return (
+            order.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (selectedStatus === '' || order.orderStatus === selectedStatus) &&
+            (!start || !end || (orderDate >= start && orderDate <= end))
+        );
+    });
 
     const statuses = [...new Set(orders.map(order => order.orderStatus))];
 
@@ -186,13 +204,18 @@ const OrderList = () => {
     return (
         <div style={{ padding: '20px' }}>
             <h1>Đơn hàng</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+            <div style={{ display: 'flex', gap: "20px", marginBottom: '20px' }}>
                 <Select defaultValue="" style={{ width: 200, borderColor: '#F56285' }} onChange={value => setSelectedStatus(value)}>
                     <Option value="">Tất cả trạng thái</Option>
                     {statuses.map(status => (
                         <Option key={status} value={status}>{status}</Option>
                     ))}
                 </Select>
+                <RangePicker
+                    style={{ width: 300, borderColor: '#F56285' }}
+                    onChange={handleDateChange}
+                    format="DD/MM/YYYY"
+                />
             </div>
             <Input
                 placeholder="Tìm tên khách hàng, số điện thoại"
