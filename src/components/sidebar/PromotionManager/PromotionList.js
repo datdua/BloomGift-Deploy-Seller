@@ -122,6 +122,7 @@ const PromotionList = () => {
             title: 'Trạng thái',
             dataIndex: 'promotionStatus',
             key: 'promotionStatus',
+            render: (text) => <span>{text === '1' ? 'Đang kích hoạt' : 'Chưa kích hoạt'}</span>,
         },
         {
             title: 'Ngày bắt đầu',
@@ -175,7 +176,7 @@ const PromotionList = () => {
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Sản phẩm</h1>
+            <h1>Khuyến mãi</h1>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                 <Select defaultValue="" style={{ width: 200, borderColor: '#F56285' }} onChange={value => setSelectedCategory(value)}>
                     <Option value="">Tất cả danh mục</Option>
