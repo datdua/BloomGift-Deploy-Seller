@@ -4,7 +4,7 @@ import { fetchPaymentByStore } from "../../../redux/actions/paymentActions";
 import { fetchOrderById } from "../../../redux/actions/orderActions";
 import { Button, Input, Select, Table, Empty, Image, Modal, Descriptions, DatePicker } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import locale from 'antd/es/date-picker/locale/vi_VN'; // Import locale for Vietnamese
+import locale from 'antd/es/date-picker/locale/vi_VN'; 
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;

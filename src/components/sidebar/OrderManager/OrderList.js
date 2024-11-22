@@ -163,13 +163,35 @@ const OrderList = () => {
         {
             title: 'Thao tác',
             key: 'action',
-            render: (_, record) => (
-                <>
-                    <Button type="link" onClick={() => handleAcceptOrder(record.orderID)}>Chấp nhận</Button>
-                    <Button type="link" onClick={() => handleCompleteOrder(record.orderID)}>Hoàn tất</Button>
-                    <Button type="link" danger onClick={() => handleRejectOrder(record.orderID)}>Từ chối</Button>
-                </>
-            ),
+            render: (_, record) => {
+                const { orderStatus, orderID } = record;
+                return (
+                    <>
+                        <Button
+                            type="link"
+                            onClick={() => handleAcceptOrder(orderID)}
+                            disabled={orderStatus !== "Đã thanh toán" && orderStatus !== "Đã hủy"}
+                        >
+                            Chấp nhận
+                        </Button>
+                        <Button
+                            type="link"
+                            onClick={() => handleCompleteOrder(orderID)}
+                            disabled={orderStatus !== "Đang thực hiện"}
+                        >
+                            Hoàn tất
+                        </Button>
+                        <Button
+                            type="link"
+                            danger
+                            onClick={() => handleRejectOrder(orderID)}
+                            disabled={orderStatus === "Đã hoàn tất" || orderStatus === "Đang thực hiện"}
+                        >
+                            Từ chối
+                        </Button>
+                    </>
+                );
+            },
         },
     ];
 
