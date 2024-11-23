@@ -5,6 +5,7 @@ import { fetchOrderById } from "../../../redux/actions/orderActions";
 import { Button, Input, Select, Table, Empty, Image, Modal, Descriptions, DatePicker } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import locale from 'antd/es/date-picker/locale/vi_VN'; 
+import moment from 'moment-timezone';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
@@ -246,7 +247,11 @@ const PaymentList = () => {
                             <Descriptions.Item label="Trạng thái">{selectedOrder.orderStatus}</Descriptions.Item>
                             <Descriptions.Item label="Ghi chú">{selectedOrder.note || "Không có ghi chú"}</Descriptions.Item>
                             <Descriptions.Item label="Địa chỉ giao hàng">{selectedOrder.deliveryAddress}</Descriptions.Item>
-                            <Descriptions.Item label="Ngày giao hàng">{new Date(selectedOrder.deliveryDateTime).toLocaleString()}</Descriptions.Item>
+                            <Descriptions.Item label="Ngày giao hàng">
+                                {selectedOrder?.deliveryDateTime
+                                    ? moment.utc(selectedOrder.deliveryDateTime).format('DD/MM/YYYY HH:mm:ss')
+                                    : 'N/A'}
+                            </Descriptions.Item>
                             <Descriptions.Item label="Tên khách hàng">{selectedOrder.accountName}</Descriptions.Item>
                             <Descriptions.Item label="Điện thoại">(+84) {selectedOrder.phone}</Descriptions.Item>
                         </Descriptions>

@@ -4,7 +4,7 @@ import { fetchAllOrdersByStoreID, acceptOrder, completedOrder, rejectOrder, fetc
 import { Button, Input, Select, Table, Empty, Modal, Descriptions, DatePicker } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import Swal from 'sweetalert2';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import locale from 'antd/es/date-picker/locale/vi_VN';
 
 const { Option } = Select;
@@ -122,14 +122,9 @@ const OrderList = () => {
             dataIndex: 'startDate',
             key: 'startDate',
             render: (date) => {
-                return new Date(date).toLocaleString('vi-VN', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
+                return date
+                    ? moment.utc(date).format('DD/MM/YYYY HH:mm:ss')
+                    : 'N/A';
             },
             sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
         },
@@ -138,14 +133,9 @@ const OrderList = () => {
             dataIndex: 'deliveryDateTime',
             key: 'deliveryDateTime',
             render: (date) => {
-                return new Date(date).toLocaleString('vi-VN', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
+                return date
+                    ? moment.utc(date).format('DD/MM/YYYY HH:mm:ss')
+                    : 'N/A';
             },
             sorter: (a, b) => new Date(a.deliveryDateTime) - new Date(b.deliveryDateTime),
         },
@@ -278,7 +268,11 @@ const OrderList = () => {
                             <Descriptions.Item label="Trạng thái">{selectedOrder.orderStatus}</Descriptions.Item>
                             <Descriptions.Item label="Ghi chú">{selectedOrder.note || "Không có ghi chú"}</Descriptions.Item>
                             <Descriptions.Item label="Địa chỉ giao hàng">{selectedOrder.deliveryAddress}</Descriptions.Item>
-                            <Descriptions.Item label="Ngày giao hàng">{new Date(selectedOrder.deliveryDateTime).toLocaleString()}</Descriptions.Item>
+                            <Descriptions.Item label="Ngày giao hàng">
+                                {selectedOrder?.deliveryDateTime
+                                    ? moment.utc(selectedOrder.deliveryDateTime).format('DD/MM/YYYY HH:mm:ss')
+                                    : 'N/A'}
+                            </Descriptions.Item>
                             <Descriptions.Item label="Tên khách hàng">{selectedOrder.accountName}</Descriptions.Item>
                             <Descriptions.Item label="Điện thoại">(+84) {selectedOrder.phone}</Descriptions.Item>
                         </Descriptions>
