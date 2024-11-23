@@ -119,14 +119,14 @@ const OrderList = () => {
         },
         {
             title: 'Ngày bắt đầu',
-            dataIndex: 'startDate',
-            key: 'startDate',
+            dataIndex: 'createAt',
+            key: 'createAt',
             render: (date) => {
                 return date
                     ? moment.utc(date).format('DD/MM/YYYY HH:mm:ss')
                     : 'N/A';
             },
-            sorter: (a, b) => new Date(a.startDate) - new Date(b.startDate),
+            sorter: (a, b) => new Date(a.createAt) - new Date(b.createAt),
         },
         {
             title: 'Ngày giao hàng',
@@ -186,7 +186,7 @@ const OrderList = () => {
     ];
 
     const filteredOrders = orders.filter(order => {
-        const orderDate = new Date(order.startDate);
+        const orderDate = new Date(order.createAt);
         const [start, end] = dateRange;
         return (
             order.accountName?.toLowerCase().includes(searchTerm.toLowerCase()) &&
